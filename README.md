@@ -1,2 +1,1 @@
-# EnhancedPokedex
-MCO1
+# PokedexInJava
