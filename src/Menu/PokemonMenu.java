@@ -9,44 +9,65 @@ import java.util.Scanner;
 
 public class PokemonMenu {
     private PokemonController controller = new PokemonController();
-    private PokemonView view = new PokemonView();
-    private ArrayList<PokemonModel> results = new ArrayList<>();
     private Scanner scanner = new Scanner(System.in);
-    private int option;
-    private String key;
+    private int option, pokedexNum;
+    private String key, name;
+    private ArrayList<PokemonModel> results = new ArrayList<>();
+    boolean running;
 
+    /**
+     * The run() method is responsible for displaying the Pokemon Management Menu.
+     */
     public void run(){
-        System.out.println("--- Welcome to the Pokémon Menu ---");
-        boolean running = true;
+        running = true;
 
         while (running) {
-            System.out.println("\nMenu:");
+            System.out.println("\n=========================================");
+            System.out.println("              Pokemon Menu               ");
+            System.out.println("=========================================");
             System.out.println("1. Add Pokémon");
             System.out.println("2. Show All Pokémon");
             System.out.println("3. Search Pokémon");
             System.out.println("4. Exit");
-            System.out.print("Choose an option: ");
+            System.out.println("-----------------------------------------");
+            System.out.print("Enter your choice: ");
 
             option = scanner.nextInt();
 
             switch (option) {
                 case 1:
-                    controller.addPokemon(view.promptPokemonData());
+                    System.out.println("\nYou are in the process of adding a pokemon!");
+                    System.out.println("----------------------------------------------");
+                    pokedexNum = view.promptPokedexNumber();
+                    if (controller.pokemonNumIsDup(pokedexNum))
+                    {
+                        view.showDuplicationErrorMessage("number");
+                    }else{
+                        name = view.promptPokemonName();
+                        if (controller.pokemonNameIsDup(name)) {
+                            view.showDuplicationErrorMessage("name");
+                        }
+                        if (controller.addPokemon(view.promptRemainingPokemonData(pokedexNum, name))) {
+                            view.successfulPokemonAddMessage(name);
+                        }
+                    }
                     break;
                 case 2:
                     view.printAllPokemons(controller.getAllPokemon());
+                    view.pressAnyKeyPrompt();
                     break;
                 case 3:
                     key = view.promptSearchKey();
                     results = controller.searchPokemon(key);
                     view.printAllPokemons(results);
+                    results.clear();
                     break;
                 case 4:
-                    System.out.println("Exiting Pokemon Menu. Goodbye!");
+                    System.out.println("Exiting Pokemon Menu. Bye!\n");
                     running = false;
                     break;
                 default:
-                    System.out.println("Invalid option.");
+                    System.out.println("Invalid option. Please try again.");
             }
         }
     }

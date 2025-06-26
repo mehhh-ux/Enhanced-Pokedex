@@ -1,5 +1,7 @@
 package Move;
 
+import java.util.ArrayList;
+
 public class MoveModel {
     private String name;
     private String description;
@@ -18,7 +20,9 @@ public class MoveModel {
         this(name, description, classification, type1);
         this.type2 = type2;
     }
-
+    /**
+     * Getters
+     */
     public String getName() {
         return name;
     }
@@ -36,23 +40,15 @@ public class MoveModel {
         return type2;
     }
 
-    public void printHeader() {
-        System.out.printf("%-30s%-5s%-10s%-10s%-60s\n", "Name", "Class", "Type 1",
-                "Type 2", "Description");
-        System.out.println("---------------------------------------------------------------------------------------------------------------");
-    }
 
-    public void displayMoveAttributes() {
-        System.out.printf("%-30s%-5s%-10s%-10s%-70s\n",
-                name, classification,
-                type1, type2 != null ? type2 : "------", reduceDescription(60));
-    }
-
-    public String reduceDescription(int maxLength) {
-        if (description.length() > maxLength) {
-            return description.substring(0, maxLength - 3) + "...";
-        } else {
-            return description;
-        }
+    /**
+     * Initializes the instances of ethe default moves (Tackle and Defend).
+     * @return the list of moves.
+     */
+    public static ArrayList<MoveModel> initializeMoveList(){
+        ArrayList<MoveModel> moves = new ArrayList<>();
+        moves.add(new MoveModel("Tackle", "The user charges and slams into the opponent with its body.", null, "Normal"));
+        moves.add(new MoveModel("Defend", "Enters a defensive stance.", null, "Normal"));
+        return moves;
     }
 }

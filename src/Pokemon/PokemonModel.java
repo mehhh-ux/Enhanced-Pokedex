@@ -20,8 +20,7 @@ public class PokemonModel {
 
     private ArrayList<MoveModel> getDefaultMoves() {
         ArrayList<MoveModel> moves = new ArrayList<>();
-        moves.add(new MoveModel("Tackle", "The user charges and slams into the opponent with its body.", null, "Normal"));
-        moves.add(new MoveModel("Defend", "Enters a defensive stance.", null, "Normal"));
+        MoveModel.initializeMoveList();
         return moves;
     }
 
@@ -94,51 +93,4 @@ public class PokemonModel {
     public void cry() {
         System.out.println(name + " cries!");
     }
-    public void printHeader() {
-        System.out.printf(
-                "%-15s%-20s%-10s%-10s%-12s%-15s%-15s%-18s%-5s%-5s%-5s%-5s\n",
-                "Pokedex Number", "Name", "Type 1", "Type 2", "Base Level",
-                "Evolves From", "Evolves To", "Evolution Level", "HP", "ATK", "DEF", "SPD");
-        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------");
-    }
-    public void displayPokemonAttributes() {
-        System.out.printf(
-                "%-15s%-20s%-10s%-10s%-12s%-15s%-15s%-18s%-5s%-5s%-5s%-5s\n",
-                pokedexNum, name, type1, type2 != null ? type2 : "------", baseLvl, evolvesFrom, evolveTo, evolutionLvl,
-                baseStats.getHp(), baseStats.getAtk(), baseStats.getDef(), baseStats.getSpd());
-    }
-
-    public static class Stats {
-        // Attributes
-        private int hp;
-        private int atk;
-        private int def;
-        private int spd;
-
-        //Constructor
-        public Stats(int hp, int atk, int def, int spd) {
-            this.hp = hp;
-            this.atk = atk;
-            this.def = def;
-            this.spd = spd;
-        }
-
-        //Getters
-        public int getHp() {
-            return hp;
-        }
-
-        public int getAtk() {
-            return atk;
-        }
-
-        public int getDef() {
-            return def;
-        }
-
-        public int getSpd() {
-            return spd;
-        }
-    }
-
 }

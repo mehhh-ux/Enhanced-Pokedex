@@ -1,3 +1,8 @@
+/**
+ * ItemMenu.java is the class that controls the main loop of the item menu.
+ * An MVC design-based management system for Item.
+ * Also responsible for exiting out of the item menu.
+ */
 package Menu;
 
 import Item.ItemController;
@@ -16,33 +21,37 @@ public class ItemMenu {
     private ArrayList<ItemModel> results = new ArrayList<>();
 
     public void run(){
-        System.out.println("--- Welcome to the Item Menu ---");
-        boolean running = true;
+        running = true;
 
         while (running) {
-            System.out.println("\nMenu:");
+            System.out.println("\n=========================================");
+            System.out.println("               Move Menu                 ");
+            System.out.println("=========================================");
             System.out.println("1. Show All Item");
             System.out.println("2. Search Item");
             System.out.println("3. Exit");
-            System.out.print("Choose an option: ");
+            System.out.println("-----------------------------------------");
+            System.out.print("Enter your choice: ");
 
             option = scanner.nextInt();
 
             switch (option) {
                 case 1:
                     view.printAllItems(controller.getAllItems());
+                    view.pressAnyKeyPrompt();
                     break;
                 case 2:
                     key = view.promptSearchKey();
                     results = controller.searchItem(key);
                     view.printAllItems(results);
+                    results.clear();
                     break;
                 case 3:
-                    System.out.println("Exiting Item Menu. Goodbye!");
+                    System.out.println("Exiting Item Menu. Bye!\n");
                     running = false;
                     break;
                 default:
-                    System.out.println("Invalid option.");
+                    System.out.println("Invalid option. Please try again.");
             }
         }
     }
