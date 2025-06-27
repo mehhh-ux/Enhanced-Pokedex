@@ -1,5 +1,13 @@
+/**
+ * PokemonMenu.java is the class that controls the main loop of the pokemon menu.
+ * An MVC design-based management system for Pokemon.
+ * Also responsible for exiting out of the pokemon menu.
+ */
 package Menu;
 
+/**
+ * Import Pokemon MVC.
+ */
 import Pokemon.PokemonController;
 import Pokemon.PokemonModel;
 import Pokemon.PokemonView;
@@ -8,6 +16,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class PokemonMenu {
+    /**
+     * Instantiation and initialization of objects and variables.
+     */
+    private PokemonView view = new PokemonView();
     private PokemonController controller = new PokemonController();
     private Scanner scanner = new Scanner(System.in);
     private int option, pokedexNum;
@@ -21,6 +33,14 @@ public class PokemonMenu {
     public void run(){
         running = true;
 
+        /**
+         * This is the main loop of the menu.
+         * Runs the appropriate method based on user input.
+         * If 1, then create and add a new pokemon into the Pokedex.
+         * If 2, then print all pokemons in the Pokedex.
+         * If 3, then search for a pokemon based on the user's input (key) then print results.
+         * If 4, then return to main menu (PokedexDriver.java).
+         */
         while (running) {
             System.out.println("\n=========================================");
             System.out.println("       Welcome to the Pokemon Menu!      ");

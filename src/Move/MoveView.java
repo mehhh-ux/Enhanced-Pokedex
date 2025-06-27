@@ -1,12 +1,24 @@
+/**
+ * MoveView.java is responsible for all outputs in the move menu.
+ */
 package Move;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MoveView {
+    /**
+     * Variable initialization for input scanning.
+     */
     private Scanner scanner = new Scanner(System.in);
     private String name, description, classification, type1, type2;
 
+    /**
+     * promptMoveData() asks the user information about the move they want to add.
+     * Once all information is gathered, this method then creates a new move object based
+       off of the user's input.
+     * @return the newly created move object.
+     */
     public MoveModel promptMoveData(){
         System.out.println("\nYou are in the process of adding a move!");
         System.out.println("-------------------------------------------");
@@ -62,18 +74,26 @@ public class MoveView {
         System.out.println("Successfully added " + name + "!");
     }
 
+    /**
+     * Prints and displays the attributes of every move objects in an ArrayList.
+     * @param moves is a list of move objects.
+     */
     public void printAllMoves(ArrayList<MoveModel> moves){
-        if (moves.isEmpty()){
-            System.out.println("No moves in the Pokedex.");
+        if (moves.isEmpty()) {
+            System.out.println("No move in the Pokedex.");
             return;
         }
 
-        moves.getFirst().printHeader();
+        printHeader();
         for (MoveModel m : moves){
             displayMoveAttributes(m);
         }
     }
 
+    /**
+     * Asks the user to enter their desired keyword for filter.
+     * @return user's input.
+     */
     public String promptSearchKey() {
         System.out.println("\nYou are in the process of searching a move!");
         System.out.println("--------------------------------------------");

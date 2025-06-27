@@ -1,3 +1,6 @@
+/**
+ * ItemView.java is responsible for all outputs in the item menu.
+ */
 package Item;
 
 import java.util.ArrayList;
@@ -42,6 +45,10 @@ public class ItemView {
         }
     }
 
+    /**
+     * Asks the user to enter their desired keyword for filter.
+     * @return user's input.
+     */
     public String promptSearchKey() {
         System.out.println("\nYou are in the process of searching a item!");
         System.out.println("------------------------------------------");

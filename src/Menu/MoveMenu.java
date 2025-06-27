@@ -1,5 +1,13 @@
+/**
+ * MoveMenu.java is the class that controls the main loop of the move menu.
+ * An MVC design-based management system for Move.
+ * Also responsible for exiting out of the move menu.
+ */
 package Menu;
 
+/**
+ * Import Move MVC.
+ */
 import Move.MoveController;
 import Move.MoveModel;
 import Move.MoveView;
@@ -8,6 +16,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MoveMenu {
+    /**
+     * Instantiation and initialization of objects and variables.
+     */
+    private MoveView view = new MoveView();
     private MoveController controller = new MoveController();
     private Scanner scanner = new Scanner(System.in);
     private int option;
@@ -21,6 +33,14 @@ public class MoveMenu {
     public void run(){
         running = true;
 
+        /**
+         * This is the main loop of the menu.
+         * Runs the appropriate method based on user input.
+         * If 1, then create and add a new move into the Pokedex.
+         * If 2, then print all moves in the Pokedex.
+         * If 3, then search for a move based on the user's input (key) then print results.
+         * If 4, then return to main menu (PokedexDriver.java).
+         */
         while (running) {
             System.out.println("\n=========================================");
             System.out.println("        Welcome to the Move Menu!        ");
