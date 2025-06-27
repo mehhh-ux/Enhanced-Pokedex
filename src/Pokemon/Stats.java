@@ -1,7 +1,7 @@
 package Pokemon;
 
 /**
- * Stats is a subclass for PokemonModel.java.
+ * Stats.java serves as the blueprint for each instance (objects) of a BaseStats/Stats on Pokemon.Java.
  * Acts as the base stats of a pokemon.
  * Holds each base stat (or simplicity).
  */

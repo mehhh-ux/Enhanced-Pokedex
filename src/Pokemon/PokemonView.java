@@ -101,6 +101,7 @@ public class PokemonView {
         scanner.nextLine();
         System.out.print("Evolution Level (Enter 0 if none): ");
         evolutionLvl = scanner.nextInt();
+        scanner.nextLine();
         System.out.print("Base HP: ");
         hp = scanner.nextInt();
         scanner.nextLine();
@@ -144,7 +145,15 @@ public class PokemonView {
      * Asks the user to press enter to continue.
      */
     public void pressAnyKeyPrompt(){
-        System.out.print("Press Enter to continue...");
+        System.out.print("Displayed all pokemon/s available in the Pokedex.\nPress Enter to continue...");
+        scanner.nextLine();
+    }
+
+    /**
+     * Asks the user to press enter to continue after searching for a pokemon.
+     */
+    public void pressAnyKeyPromptSearch(String key){
+        System.out.print("Displayed all pokemon/s containing the word '" + key + "' in the Pokedex.\nPress Enter to continue...");
         scanner.nextLine();
     }
 }

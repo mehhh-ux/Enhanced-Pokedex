@@ -23,7 +23,7 @@ public class PokemonMenu {
 
         while (running) {
             System.out.println("\n=========================================");
-            System.out.println("              Pokemon Menu               ");
+            System.out.println("       Welcome to the Pokemon Menu!      ");
             System.out.println("=========================================");
             System.out.println("1. Add Pokémon");
             System.out.println("2. Show All Pokémon");
@@ -33,6 +33,7 @@ public class PokemonMenu {
             System.out.print("Enter your choice: ");
 
             option = scanner.nextInt();
+            scanner.nextLine();
 
             switch (option) {
                 case 1:
@@ -46,8 +47,7 @@ public class PokemonMenu {
                         name = view.promptPokemonName();
                         if (controller.pokemonNameIsDup(name)) {
                             view.showDuplicationErrorMessage("name");
-                        }
-                        if (controller.addPokemon(view.promptRemainingPokemonData(pokedexNum, name))) {
+                        }else if (controller.addPokemon(view.promptRemainingPokemonData(pokedexNum, name))) {
                             view.successfulPokemonAddMessage(name);
                         }
                     }
@@ -60,6 +60,7 @@ public class PokemonMenu {
                     key = view.promptSearchKey();
                     results = controller.searchPokemon(key);
                     view.printAllPokemons(results);
+                    view.pressAnyKeyPromptSearch(key);
                     results.clear();
                     break;
                 case 4:

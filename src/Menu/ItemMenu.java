@@ -25,7 +25,7 @@ public class ItemMenu {
 
         while (running) {
             System.out.println("\n=========================================");
-            System.out.println("               Move Menu                 ");
+            System.out.println("       Welcome to the Item Menu!         ");
             System.out.println("=========================================");
             System.out.println("1. Show All Item");
             System.out.println("2. Search Item");
@@ -34,6 +34,7 @@ public class ItemMenu {
             System.out.print("Enter your choice: ");
 
             option = scanner.nextInt();
+            scanner.nextLine();
 
             switch (option) {
                 case 1:
@@ -44,6 +45,7 @@ public class ItemMenu {
                     key = view.promptSearchKey();
                     results = controller.searchItem(key);
                     view.printAllItems(results);
+                    view.pressAnyKeyPromptSearch(key);
                     results.clear();
                     break;
                 case 3:

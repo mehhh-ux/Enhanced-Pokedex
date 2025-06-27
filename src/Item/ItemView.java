@@ -53,7 +53,15 @@ public class ItemView {
      * Asks the user to press enter to continue.
      */
     public void pressAnyKeyPrompt(){
-        System.out.print("Press Enter to continue...");
+        System.out.print("Displayed all item/s available in the Pokedex.\nPress Enter to continue...");
+        scanner.nextLine();
+    }
+
+    /**
+     * Asks the user to press enter to continue after searching for an item.
+     */
+    public void pressAnyKeyPromptSearch(String key){
+        System.out.print("Displayed all item/s containing the word '" + key + "' in the Pokedex.\nPress Enter to continue...");
         scanner.nextLine();
     }
 }

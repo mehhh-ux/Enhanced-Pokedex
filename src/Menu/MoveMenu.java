@@ -23,7 +23,7 @@ public class MoveMenu {
 
         while (running) {
             System.out.println("\n=========================================");
-            System.out.println("              Move Menu                  ");
+            System.out.println("        Welcome to the Move Menu!        ");
             System.out.println("=========================================");
             System.out.println("1. Add Move");
             System.out.println("2. Show All Move");
@@ -33,6 +33,7 @@ public class MoveMenu {
             System.out.print("Enter your choice: ");
 
             option = scanner.nextInt();
+            scanner.nextLine();
 
             switch (option) {
                 case 1:
@@ -47,6 +48,7 @@ public class MoveMenu {
                     key = view.promptSearchKey();
                     results = controller.searchMove(key);
                     view.printAllMoves(results);
+                    view.pressAnyKeyPromptSearch(key);
                     results.clear();
                     break;
                 case 4:
