@@ -1,3 +1,8 @@
+/**
+ * PokedexDriver.java is the driver app and controls the main loop of the program.
+ * It is responsible for managing each menu in the Pokedex based on user input.
+ * It is also responsible for the termination of the program.
+ */
 import java.util.Scanner;
 
 import Menu.ItemMenu;

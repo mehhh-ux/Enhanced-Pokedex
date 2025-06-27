@@ -1,14 +1,25 @@
+/**
+ * MoveModel.java serves as the blueprint for each instance (objects) of a Move.
+ * Holds the properties and behaviours of a Move.
+ * Two move constructors (one for a single type move and another for a double type).
+ */
 package Move;
 
 import java.util.ArrayList;
 
 public class MoveModel {
-    private String name;
-    private String description;
-    private String classification;
-    private String type1;
-    private String type2;
+    /**
+     * Move Attributes
+     */
+    private String name, description, classification, type1, type2;
 
+    /**
+     * Move Constructor (Single Type)
+     * @param name
+     * @param description
+     * @param classification
+     * @param type1
+     */
     public MoveModel(String name, String description, String classification, String type1) {
         this.name = name;
         this.description = description;
@@ -16,6 +27,14 @@ public class MoveModel {
         this.type1 = type1;
     }
 
+    /**
+     * Move Constructor (Double Types)
+     * @param name
+     * @param description
+     * @param classification
+     * @param type1
+     * @param type2
+     */
     public MoveModel(String name, String description, String classification, String type1, String type2) {
         this(name, description, classification, type1);
         this.type2 = type2;
@@ -26,10 +45,7 @@ public class MoveModel {
     public String getName() {
         return name;
     }
-    public String getDescription() {
-        return description;
-    }
-
+    public String getDescription() { return description; }
     public String getClassification() {
         return classification;
     }

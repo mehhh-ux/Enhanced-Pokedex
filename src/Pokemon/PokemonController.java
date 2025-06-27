@@ -1,19 +1,46 @@
+/**
+ * PokemonController.java is responsible for receiving and giving Pokemon data.
+ * Responsible for saving the list of all moves in the Pokedex and adding
+   new moves into the list.
+ * Able to give a list of moves based on an operation or a method.
+ */
 package Pokemon;
 
 import java.util.ArrayList;
 
 public class PokemonController {
+    /**
+     * A list of pokemons.
+     * The ArrayList pokemons is used to keep track of all pokemons in the Pokedex.
+     * The ArrayList results is used to hold a list of moves after using an operation
+       (for example the search function).
+     */
     private ArrayList<PokemonModel> pokemons = new ArrayList<>();
     private ArrayList<PokemonModel> results = new ArrayList<>();
 
-    public void addPokemon(PokemonModel p) {
-        pokemons.add(p);
+    /**
+     * Adds a pokemon into the pokemons ArrayList.
+     * @param p is the pokemon to be saved.
+     * @return whether adding of pokemon is successful or not
+     */
+    public boolean addPokemon(PokemonModel p) {
+        return pokemons.add(p);
     }
 
+    /**
+     * Getter
+     * @return the list of pokemons in the Pokedex.
+     */
     public ArrayList<PokemonModel> getAllPokemon() {
         return pokemons;
     }
 
+    /**
+     * Search for a pokemon or a list of pokemons based off from a key.
+     * @param key is the input of the user that will be used to search if
+       a move has an attribute that matches said key.
+     * @return the resulting list of pokemons.
+     */
     public ArrayList<PokemonModel> searchPokemon(String key) {
         key = key.toLowerCase();
         for (PokemonModel p : pokemons) {

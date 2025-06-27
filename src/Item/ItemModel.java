@@ -1,3 +1,7 @@
+/**
+ * ItemModel.java serves as the blueprint for each instance (objects) of an Item.
+ * Holds the properties and behaviours of an Item.
+ */
 package Item;
 
 import java.util.ArrayList;
@@ -9,7 +13,15 @@ public class ItemModel {
     private String name, category, description, effect;
     private double buyingPrice, sellingPrice;
 
-    //Constructor
+    /**
+     * Item Constructor
+     * @param name
+     * @param category
+     * @param description
+     * @param effect
+     * @param buyingPrice
+     * @param sellingPrice
+     */
     public ItemModel(String name, String category, String description, String effect,
                 double buyingPrice, double sellingPrice) {
         this.name = name;
@@ -20,7 +32,9 @@ public class ItemModel {
         this.sellingPrice = sellingPrice;
     }
 
-    //Getters
+    /**
+     * Getters
+     */
     public String getName(){
         return name;
     }
@@ -32,7 +46,6 @@ public class ItemModel {
     public String getDescription(){
         return description;
     }
-
     public String getEffect(){
         return effect;
     }
