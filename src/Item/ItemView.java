@@ -22,6 +22,7 @@ public class ItemView {
 
     /**
      * Displays all attributes of the item.
+     * @param item is a class of ItemModel which contains all the attribute to be displayed.
      */
     public void displayItemAttributes(ItemModel item) {
         System.out.printf(

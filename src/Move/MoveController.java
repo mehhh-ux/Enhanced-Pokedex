@@ -21,7 +21,7 @@ public class MoveController {
     /**
      * Adds a move into the moves ArrayList.
      * @param m is the move to be saved.
-     * @return a String of the last added move
+     * @return a String of the name of the last added move
      */
     public String addMove(MoveModel m) {
         moves.add(m);
@@ -30,7 +30,7 @@ public class MoveController {
 
     /**
      * Getter
-     * @return the list of items in the Pokedex.
+     * @return the list of moves in the Pokedex.
      */
     public ArrayList<MoveModel> getAllMoves() {
         return moves;

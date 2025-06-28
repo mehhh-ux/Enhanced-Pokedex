@@ -38,7 +38,7 @@ public class PokemonController {
     /**
      * Search for a pokemon or a list of pokemons based off from a key.
      * @param key is the input of the user that will be used to search if
-       a move has an attribute that matches said key.
+       a pokemon has an attribute that matches said key.
      * @return the resulting list of pokemons.
      */
     public ArrayList<PokemonModel> searchPokemon(String key) {

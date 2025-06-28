@@ -50,6 +50,7 @@ public class MoveView {
 
     /**
      * Displays all attributes of the move.
+     * @param move is a class of MoveModel which contains the move itself
      */
     public void displayMoveAttributes(MoveModel move) {
         System.out.printf("%-30s%-10s%-15s%-15s%-70s\n",
@@ -70,6 +71,11 @@ public class MoveView {
         }
     }
 
+
+    /**
+     * successfulPokemonAddMessage() prints a message if the addition of move is successful
+     * @param name is a String depending on the move name.
+     */
     public void successfulMoveAddMessage(String name){
         System.out.println("Successfully added " + name + "!");
     }

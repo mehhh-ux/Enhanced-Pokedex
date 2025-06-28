@@ -40,18 +40,39 @@ public class MoveModel {
         this.type2 = type2;
     }
     /**
-     * Getters
+     * Getter
+     * @return the name of the move in the Pokedex.
      */
     public String getName() {
         return name;
     }
+
+    /**
+     * Getter
+     * @return the description of the move in the Pokedex.
+     */
     public String getDescription() { return description; }
+
+    /**
+     * Getter
+     * @return the classification of the move in the Pokedex.
+     */
     public String getClassification() {
         return classification;
     }
+
+    /**
+     * Getter
+     * @return the type 1 of the move in the Pokedex.
+     */
     public String getType1() {
         return type1;
     }
+
+    /**
+     * Getter
+     * @return the type 2 of the move in the Pokedex.
+     */
     public String getType2() {
         return type2;
     }

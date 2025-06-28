@@ -33,27 +33,49 @@ public class ItemModel {
     }
 
     /**
-     * Getters
+     * Getter
+     * @return the name of the item in the Pokedex.
      */
     public String getName(){
         return name;
     }
 
+    /**
+     * Getter
+     * @return the category of the item in the Pokedex.
+     */
     public String getCategory(){
         return category;
     }
 
+    /**
+     * Getter
+     * @return the description of the item in the Pokedex.
+     */
     public String getDescription(){
         return description;
     }
+
+    /**
+     * Getter
+     * @return the effect of the item in the Pokedex.
+     */
     public String getEffect(){
         return effect;
     }
 
+    /**
+     * Getter
+     * @return the buying price of the item in the Pokedex.
+     */
     public double getBuyingPrice(){
         return buyingPrice;
     }
 
+    /**
+     * Getter
+     * @return the selling price of the item in the Pokedex.
+     */
     public double getSellingPrice(){
         return sellingPrice;
     }

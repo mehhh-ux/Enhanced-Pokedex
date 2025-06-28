@@ -22,6 +22,7 @@ public class PokemonView {
 
     /**
      * Displays all attributes of the pokemon.
+     * @param pokemon contains the PokemonModel class which the attributes will be printed
      */
     public void displayPokemonAttributes(PokemonModel pokemon) {
         System.out.printf(

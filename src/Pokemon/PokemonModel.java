@@ -74,48 +74,89 @@ public class PokemonModel {
     }
 
     /**
-     * Getters
+     * Getter
+     * @return the pokedex number of the pokemon in the Pokedex.
      */
     public int getPokedexNum() {
         return pokedexNum;
     }
 
+    /**
+     * Getter
+     * @return the name of the pokemon in the Pokedex.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Getter
+     * @return the type 1 of the pokemon in the Pokedex.
+     */
     public String getType1() {
         return type1;
     }
 
+    /**
+     * Getter
+     * @return the type 2 of the pokemon in the Pokedex.
+     */
     public String getType2() {
         return type2;
     }
 
+    /**
+     * Getter
+     * @return the base level of the pokemon in the Pokedex.
+     */
     public int getBaseLvl() {
         return baseLvl;
     }
 
+    /**
+     * Getter
+     * @return the what pokedex number does the pokemon evolves from in the Pokedex.
+     */
     public int getEvolvesFrom() {
         return evolvesFrom;
     }
 
+    /**
+     * Getter
+     * @return the what pokedex number does the pokemon evolves to in the Pokedex.
+     */
     public int getEvolvesTo() {
         return evolveTo;
     }
 
+    /**
+     * Getter
+     * @return the what required level so that the pokemon evolves in the Pokedex.
+     */
     public int getEvolutionLvl() {
         return evolutionLvl;
     }
 
+    /**
+     * Getter
+     * @return the basic statistics of the pokemon in the Pokedex.
+     */
     public Stats getBaseStats() {
         return baseStats;
     }
 
+    /**
+     * Getter
+     * @return what moves does the pokemon have in the Pokedex.
+     */
     public ArrayList<MoveModel> getMoveSet() {
         return moveSet;
     }
 
+    /**
+     * Getter
+     * @return what item does the pokemon held in the Pokedex.
+     */
     public ItemModel getHeldItem() {
         return heldItem;
     }
