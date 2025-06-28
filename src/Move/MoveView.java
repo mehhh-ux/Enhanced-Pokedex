@@ -115,7 +115,7 @@ public class MoveView {
      * @param key is a string that is searched by the user
      */
     public void pressAnyKeyPromptSearch(String key){
-        System.out.print("Displayed all move/s containing the word '" + key + "' in the Pokedex.\nPress Enter to continue...");
+        System.out.print("Displayed all move/s containing the word/number '" + key + "' in the Pokedex.\nPress Enter to continue...");
         scanner.nextLine();
     }
 }
