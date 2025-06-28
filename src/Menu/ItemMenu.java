@@ -23,7 +23,7 @@ public class ItemMenu {
     private ItemController controller = new ItemController();
     private Scanner scanner = new Scanner(System.in);
     private int option;
-    private String key;
+    private String key = "";
     private ArrayList<ItemModel> results = new ArrayList<>();
     private boolean running;
     /**
@@ -54,14 +54,16 @@ public class ItemMenu {
 
             switch (option) {
                 case 1:
-                    view.printAllItems(controller.getAllItems());
+                    view.printAllItems(controller.getAllItems(), key);
                     view.pressAnyKeyPrompt();
                     break;
                 case 2:
                     key = view.promptSearchKey();
                     results = controller.searchItem(key);
-                    view.printAllItems(results);
-                    view.pressAnyKeyPromptSearch(key);
+                    view.printAllItems(results, key);
+                    if (!results.isEmpty()) {
+                        view.pressAnyKeyPromptSearch(key);
+                    }
                     results.clear();
                     break;
                 case 3:

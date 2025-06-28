@@ -23,7 +23,7 @@ public class PokemonMenu {
     private PokemonController controller = new PokemonController();
     private Scanner scanner = new Scanner(System.in);
     private int option, pokedexNum;
-    private String key, name;
+    private String key = "", name;
     private ArrayList<PokemonModel> results = new ArrayList<>();
     boolean running;
 
@@ -73,14 +73,16 @@ public class PokemonMenu {
                     }
                     break;
                 case 2:
-                    view.printAllPokemons(controller.getAllPokemon());
+                    view.printAllPokemons(controller.getAllPokemon(), key);
                     view.pressAnyKeyPrompt();
                     break;
                 case 3:
                     key = view.promptSearchKey();
                     results = controller.searchPokemon(key);
-                    view.printAllPokemons(results);
-                    view.pressAnyKeyPromptSearch(key);
+                    view.printAllPokemons(results, key);
+                    if (!results.isEmpty()) {
+                        view.pressAnyKeyPromptSearch(key);
+                    }
                     results.clear();
                     break;
                 case 4:

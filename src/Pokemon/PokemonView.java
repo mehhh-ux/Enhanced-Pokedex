@@ -124,7 +124,7 @@ public class PokemonView {
 
     public void printAllPokemons(ArrayList<PokemonModel> pokemons) {
         if (pokemons.isEmpty()) {
-            System.out.println("No pokemon in the Pokedex.");
+            System.out.println("No pokemon containing the word '" + key + "' in the Pokedex.");
             return;
         }
 
@@ -151,6 +151,7 @@ public class PokemonView {
 
     /**
      * Asks the user to press enter to continue after searching for a pokemon.
+     * @param key is a string that is searched by the user
      */
     public void pressAnyKeyPromptSearch(String key){
         System.out.print("Displayed all pokemon/s containing the word '" + key + "' in the Pokedex.\nPress Enter to continue...");

@@ -23,7 +23,7 @@ public class MoveMenu {
     private MoveController controller = new MoveController();
     private Scanner scanner = new Scanner(System.in);
     private int option;
-    private String key, tempName;
+    private String key = "", tempName;
     private ArrayList<MoveModel> results = new ArrayList<>();
     boolean running;
 
@@ -61,14 +61,16 @@ public class MoveMenu {
                     view.successfulMoveAddMessage(tempName);
                     break;
                 case 2:
-                    view.printAllMoves(controller.getAllMoves());
+                    view.printAllMoves(controller.getAllMoves(), key);
                     view.pressAnyKeyPrompt();
                     break;
                 case 3:
                     key = view.promptSearchKey();
                     results = controller.searchMove(key);
-                    view.printAllMoves(results);
-                    view.pressAnyKeyPromptSearch(key);
+                    view.printAllMoves(results, key);
+                    if (!results.isEmpty()) {
+                        view.pressAnyKeyPromptSearch(key);
+                    }
                     results.clear();
                     break;
                 case 4:

@@ -77,10 +77,11 @@ public class MoveView {
     /**
      * Prints and displays the attributes of every move objects in an ArrayList.
      * @param moves is a list of move objects.
+     * @param key is a string that is searched by the user (this is used with the search method)
      */
-    public void printAllMoves(ArrayList<MoveModel> moves){
+    public void printAllMoves(ArrayList<MoveModel> moves, String key){
         if (moves.isEmpty()) {
-            System.out.println("No move in the Pokedex.");
+            System.out.println("No move containing the word '" + key + "' in the Pokedex.");
             return;
         }
 
@@ -111,6 +112,7 @@ public class MoveView {
 
     /**
      * Asks the user to press enter to continue after searching for a move.
+     * @param key is a string that is searched by the user
      */
     public void pressAnyKeyPromptSearch(String key){
         System.out.print("Displayed all move/s containing the word '" + key + "' in the Pokedex.\nPress Enter to continue...");

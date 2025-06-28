@@ -32,10 +32,11 @@ public class ItemView {
     /**
      * Prints and displays the attributes of every item objects in an ArrayList.
      * @param items is a list of item objects.
+     * @param key is a string that is searched by the user (this is used with the search method)
      */
-    public void printAllItems(ArrayList<ItemModel> items) {
+    public void printAllItems(ArrayList<ItemModel> items, String key) {
         if (items.isEmpty()) {
-            System.out.println("No items in the Pokedex.");
+            System.out.println("No item containing the word '" + key + "' in the Pokedex.");
             return;
         }
 
@@ -66,6 +67,7 @@ public class ItemView {
 
     /**
      * Asks the user to press enter to continue after searching for an item.
+     * @param key is a string that is searched by the user
      */
     public void pressAnyKeyPromptSearch(String key){
         System.out.print("Displayed all item/s containing the word '" + key + "' in the Pokedex.\nPress Enter to continue...");
