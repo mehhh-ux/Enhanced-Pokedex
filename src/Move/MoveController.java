@@ -15,15 +15,15 @@ public class MoveController {
      * The ArrayList results is used to hold a list of moves after using an operation
        (for example the search function).
      */
-    private ArrayList<MoveModel> moves = MoveModel.initializeMoveList();
-    private ArrayList<MoveModel> results = new ArrayList<>();
+    private ArrayList<Move> moves = Move.initializeMoveList();
+    private ArrayList<Move> results = new ArrayList<>();
 
     /**
      * Adds a move into the moves ArrayList.
      * @param m is the move to be saved.
      * @return a String of the name of the last added move
      */
-    public String addMove(MoveModel m) {
+    public String addMove(Move m) {
         moves.add(m);
         return m.getName();
     }
@@ -32,7 +32,7 @@ public class MoveController {
      * Getter
      * @return the list of moves in the Pokedex.
      */
-    public ArrayList<MoveModel> getAllMoves() {
+    public ArrayList<Move> getAllMoves() {
         return moves;
     }
 
@@ -42,9 +42,9 @@ public class MoveController {
        a move has an attribute that matches said key.
      * @return the resulting list of moves.
      */
-    public ArrayList<MoveModel> searchMove(String key) {
+    public ArrayList<Move> searchMove(String key) {
         key = key.toLowerCase();
-        for (MoveModel m : moves) {
+        for (Move m : moves) {
             if (m.getName().toLowerCase().contains(key) ||
                     (m.getClassification() != null && m.getClassification().toLowerCase().contains(key)) ||
                     m.getType1().toLowerCase().contains(key) ||

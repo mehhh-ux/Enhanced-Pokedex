@@ -8,8 +8,8 @@ package Menu;
 /**
  * Import Pokemon MVC.
  */
+import Pokemon.Pokemon;
 import Pokemon.PokemonController;
-import Pokemon.PokemonModel;
 import Pokemon.PokemonView;
 
 import java.util.ArrayList;
@@ -24,8 +24,8 @@ public class PokemonMenu {
     private Scanner scanner = new Scanner(System.in);
     private int option, pokedexNum;
     private String key = "", name;
-    private ArrayList<PokemonModel> results = new ArrayList<>();
-    boolean running;
+    private ArrayList<Pokemon> results = new ArrayList<>();
+    private boolean running;
 
     /**
      * The run() method is responsible for displaying the Pokemon Management Menu.
@@ -73,15 +73,17 @@ public class PokemonMenu {
                     }
                     break;
                 case 2:
-                    view.printAllPokemons(controller.getAllPokemon(), key);
-                    view.pressAnyKeyPrompt();
+                    view.printAll(controller.getAllPokemon(), key);
+                    if (!controller.getAllPokemon().isEmpty()) {
+                        view.pressAnyKeyPrompt();
+                    }
                     break;
                 case 3:
-                    key = view.promptSearchKey();
+                    key = view.promptForSearchKey();
                     results = controller.searchPokemon(key);
-                    view.printAllPokemons(results, key);
+                    view.printAll(results, key);
                     if (!results.isEmpty()) {
-                        view.pressAnyKeyPromptSearch(key);
+                        view.pressAnyKeyPromptForSearch(key);
                     }
                     results.clear();
                     break;

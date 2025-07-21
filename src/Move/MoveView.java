@@ -3,10 +3,12 @@
  */
 package Move;
 
+import Interfaces.Displayable;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class MoveView {
+public class MoveView implements Displayable<Move> {
     /**
      * Variable initialization for input scanning.
      */
@@ -19,7 +21,7 @@ public class MoveView {
        off of the user's input.
      * @return the newly created move object.
      */
-    public MoveModel promptMoveData(){
+    public Move promptMoveData(){
         System.out.println("\nYou are in the process of adding a move!");
         System.out.println("-------------------------------------------");
         System.out.print("Name: ");
@@ -35,13 +37,14 @@ public class MoveView {
         type2 = type2.isEmpty() ? null : type2;
 
         return (type2 == null)
-                ? new MoveModel(name, description, classification, type1)
-                : new MoveModel(name, description, classification, type1, type2);
+                ? new Move(name, description, classification, type1)
+                : new Move(name, description, classification, type1, type2);
     }
 
     /**
      * Header for displaying moves and their attributes.
      */
+    @Override
     public void printHeader() {
         System.out.printf("\n%-30s%-10s%-15s%-15s%-60s\n", "Name", "Class", "Type 1",
                 "Type 2", "Description");
@@ -50,9 +53,10 @@ public class MoveView {
 
     /**
      * Displays all attributes of the move.
-     * @param move is a class of MoveModel which contains the move itself
+     * @param move is a class of Move which contains the move itself
      */
-    public void displayMoveAttributes(MoveModel move) {
+    @Override
+    public void displayAttributes(Move move) {
         System.out.printf("%-30s%-10s%-15s%-15s%-70s\n",
                 move.getName(), move.getClassification() != null ? move.getClassification() : "-----",
                 move.getType1(), move.getType2() != null ? move.getType2() : "------", reduceDescription(60, move.getDescription()));
@@ -85,15 +89,19 @@ public class MoveView {
      * @param moves is a list of move objects.
      * @param key is a string that is searched by the user (this is used with the search method)
      */
-    public void printAllMoves(ArrayList<MoveModel> moves, String key){
-        if (moves.isEmpty()) {
+    @Override
+    public void printAll(ArrayList<Move> moves, String key){
+        if (moves.isEmpty() && !key.isEmpty()) {
             System.out.println("No move containing the word '" + key + "' in the Pokedex.");
+            return;
+        }else if (moves.isEmpty()) {
+            System.out.println("No move to show in the pokedex");
             return;
         }
 
         printHeader();
-        for (MoveModel m : moves){
-            displayMoveAttributes(m);
+        for (Move m : moves){
+            displayAttributes(m);
         }
     }
 
@@ -101,7 +109,8 @@ public class MoveView {
      * Asks the user to enter their desired keyword for filter.
      * @return user's input.
      */
-    public String promptSearchKey() {
+    @Override
+    public String promptForSearchKey() {
         System.out.println("\nYou are in the process of searching a move!");
         System.out.println("--------------------------------------------");
         System.out.print("Enter a search keyword: ");
@@ -111,6 +120,7 @@ public class MoveView {
     /**
      * Asks the user to press enter to continue.
      */
+    @Override
     public void pressAnyKeyPrompt(){
         System.out.print("Displayed all move/s available in the Pokedex.\nPress Enter to continue...");
         scanner.nextLine();
@@ -120,7 +130,8 @@ public class MoveView {
      * Asks the user to press enter to continue after searching for a move.
      * @param key is a string that is searched by the user
      */
-    public void pressAnyKeyPromptSearch(String key){
+    @Override
+    public void pressAnyKeyPromptForSearch(String key){
         System.out.print("Displayed all move/s containing the word/number '" + key + "' in the Pokedex.\nPress Enter to continue...");
         scanner.nextLine();
     }

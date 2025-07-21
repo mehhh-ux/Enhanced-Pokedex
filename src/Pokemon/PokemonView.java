@@ -1,5 +1,7 @@
 package Pokemon;
 
+import Interfaces.Displayable;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,6 +14,7 @@ public class PokemonView {
     /**
      * Header for displaying pokemons and their attributes.
      */
+    @Override
     public void printHeader() {
         System.out.printf(
                 "\n%-15s%-20s%-15s%-15s%-12s%-15s%-15s%-18s%-5s%-5s%-5s%-5s\n",
@@ -22,9 +25,10 @@ public class PokemonView {
 
     /**
      * Displays all attributes of the pokemon.
-     * @param pokemon contains the PokemonModel class which the attributes will be printed
+     * @param pokemon contains the Pokemon class which the attributes will be printed
      */
-    public void displayPokemonAttributes(PokemonModel pokemon) {
+    @Override
+    public void displayAttributes(Pokemon pokemon) {
         System.out.printf(
                 "%-15d%-20s%-15s%-15s%-12d%-15s%-15s%-18s%-5d%-5d%-5d%-5d\n",
                 pokemon.getPokedexNum(), pokemon.getName(), pokemon.getType1(), pokemon.getType2() != null ? pokemon.getType2() : "------",
@@ -52,7 +56,7 @@ public class PokemonView {
      * @return the name from user input.
      */
     public String promptPokemonName(){
-        System.out.print("Pokedex Name: ");
+        System.out.print("Pokemon Name: ");
         name = scanner.nextLine();
         return name;
     }
@@ -83,7 +87,7 @@ public class PokemonView {
      * @param name is the pokemon name from the previous prompt.
      * @return the newly created pokemon object.
      */
-    public PokemonModel promptRemainingPokemonData(int pokedexNum, String name) {
+    public Pokemon promptRemainingPokemonData(int pokedexNum, String name) {
         this.pokedexNum = pokedexNum;
         this.name = name;
         System.out.print("Type 1: ");
@@ -119,19 +123,21 @@ public class PokemonView {
         stats = new Stats(hp, atk, def, spd);
 
         return (type2 == null)
-                ? new PokemonModel(pokedexNum, name, type1, baseLvl, evolvesFrom, evolvesTo, evolutionLvl, stats)
-                : new PokemonModel(pokedexNum, name, type1, type2, baseLvl, evolvesFrom, evolvesTo, evolutionLvl, stats);
+                ? new Pokemon(pokedexNum, name, type1, baseLvl, evolvesFrom, evolvesTo, evolutionLvl, stats)
+                : new Pokemon(pokedexNum, name, type1, type2, baseLvl, evolvesFrom, evolvesTo, evolutionLvl, stats);
     }
 
     public void printAllPokemons(ArrayList<PokemonModel> pokemons) {
         if (pokemons.isEmpty()) {
             System.out.println("No pokemon containing the word '" + key + "' in the Pokedex.");
             return;
+        }else if(pokemons.isEmpty()) {
+            System.out.println("No pokemon to show in the pokedex.");
+            return;
         }
-
         printHeader();
-        for (PokemonModel p : pokemons) {
-            displayPokemonAttributes(p);
+        for (Pokemon p : pokemons) {
+            displayAttributes(p);
         }
     }
 
@@ -145,6 +151,7 @@ public class PokemonView {
     /**
      * Asks the user to press enter to continue.
      */
+    @Override
     public void pressAnyKeyPrompt(){
         System.out.print("Displayed all pokemon/s available in the Pokedex.\nPress Enter to continue...");
         scanner.nextLine();
@@ -154,7 +161,8 @@ public class PokemonView {
      * Asks the user to press enter to continue after searching for a pokemon.
      * @param key is a string that is searched by the user
      */
-    public void pressAnyKeyPromptSearch(String key){
+    @Override
+    public void pressAnyKeyPromptForSearch(String key){
         System.out.print("Displayed all pokemon/s containing the word/number '" + key + "' in the Pokedex.\nPress Enter to continue...");
         scanner.nextLine();
     }

@@ -9,7 +9,7 @@ package Menu;
  * Import Move MVC.
  */
 import Move.MoveController;
-import Move.MoveModel;
+import Move.Move;
 import Move.MoveView;
 
 import java.util.ArrayList;
@@ -24,8 +24,8 @@ public class MoveMenu {
     private Scanner scanner = new Scanner(System.in);
     private int option;
     private String key = "", tempName;
-    private ArrayList<MoveModel> results = new ArrayList<>();
-    boolean running;
+    private ArrayList<Move> results = new ArrayList<>();
+    private boolean running;
 
     /**
      * The run() method is responsible for displaying the Move Management Menu.
@@ -61,15 +61,17 @@ public class MoveMenu {
                     view.successfulMoveAddMessage(tempName);
                     break;
                 case 2:
-                    view.printAllMoves(controller.getAllMoves(), key);
-                    view.pressAnyKeyPrompt();
+                    view.printAll(controller.getAllMoves(), key);
+                    if (!controller.getAllMoves().isEmpty()) {
+                        view.pressAnyKeyPrompt();
+                    }
                     break;
                 case 3:
-                    key = view.promptSearchKey();
+                    key = view.promptForSearchKey();
                     results = controller.searchMove(key);
-                    view.printAllMoves(results, key);
+                    view.printAll(results, key);
                     if (!results.isEmpty()) {
-                        view.pressAnyKeyPromptSearch(key);
+                        view.pressAnyKeyPromptForSearch(key);
                     }
                     results.clear();
                     break;

@@ -14,14 +14,14 @@ public class ItemController {
      * The ArrayList results is used to hold a list of items after using an operation
      (for example the search function).
      */
-    private ArrayList<ItemModel> items = ItemModel.initializeItemList();
-    private ArrayList<ItemModel> results = new ArrayList<>();
+    private ArrayList<Item> items = Item.initializeItemList();
+    private ArrayList<Item> results = new ArrayList<>();
 
     /**
      * Getter
      * @return the list of items in the Pokedex.
      */
-    public ArrayList<ItemModel> getAllItems() {
+    public ArrayList<Item> getAllItems() {
         return items;
     }
 
@@ -31,9 +31,9 @@ public class ItemController {
     an item has an attribute that matches said key.
      * @return the resulting list of items.
      */
-    public ArrayList<ItemModel> searchItem(String key) {
+    public ArrayList<Item> searchItem(String key) {
         key = key.toLowerCase();
-        for (ItemModel i : items) {
+        for (Item i : items) {
             if (i.getName().toLowerCase().contains(key) ||
                     i.getCategory().toLowerCase().contains(key) ||
                     i.getEffect().toLowerCase().contains(key) ||

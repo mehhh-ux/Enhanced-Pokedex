@@ -15,15 +15,15 @@ public class PokemonController {
      * The ArrayList results is used to hold a list of moves after using an operation
        (for example the search function).
      */
-    private ArrayList<PokemonModel> pokemons = new ArrayList<>();
-    private ArrayList<PokemonModel> results = new ArrayList<>();
+    private ArrayList<Pokemon> pokemons = new ArrayList<>();
+    private ArrayList<Pokemon> results = new ArrayList<>();
 
     /**
      * Adds a pokemon into the pokemons ArrayList.
      * @param p is the pokemon to be saved.
      * @return whether adding of pokemon is successful or not
      */
-    public boolean addPokemon(PokemonModel p) {
+    public boolean addPokemon(Pokemon p) {
         return pokemons.add(p);
     }
 
@@ -31,7 +31,7 @@ public class PokemonController {
      * Getter
      * @return the list of pokemons in the Pokedex.
      */
-    public ArrayList<PokemonModel> getAllPokemon() {
+    public ArrayList<Pokemon> getAllPokemon() {
         return pokemons;
     }
 
@@ -41,9 +41,9 @@ public class PokemonController {
        a pokemon has an attribute that matches said key.
      * @return the resulting list of pokemons.
      */
-    public ArrayList<PokemonModel> searchPokemon(String key) {
+    public ArrayList<Pokemon> searchPokemon(String key) {
         key = key.toLowerCase();
-        for (PokemonModel p : pokemons) {
+        for (Pokemon p : pokemons) {
             if (String.valueOf(p.getPokedexNum()).contains(key) ||
                     p.getName().toLowerCase().contains(key) ||
                     p.getType1().toLowerCase().contains(key) ||
@@ -62,7 +62,7 @@ public class PokemonController {
      * @return a boolean value.
      */
     public boolean pokemonNumIsDup(int pokedexNum){
-        for (PokemonModel p: pokemons){
+        for (Pokemon p: pokemons){
             if (p.getPokedexNum() == pokedexNum){
                 return true;
             }
@@ -78,7 +78,7 @@ public class PokemonController {
      * @return a boolean value.
      */
     public boolean pokemonNameIsDup(String pokedexName){
-        for (PokemonModel p: pokemons){
+        for (Pokemon p: pokemons){
             if (p.getName().equalsIgnoreCase(pokedexName)){
                 return true;
             }

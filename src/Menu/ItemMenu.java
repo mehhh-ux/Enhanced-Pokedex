@@ -9,7 +9,7 @@ package Menu;
  * Import Item MVC.
  */
 import Item.ItemController;
-import Item.ItemModel;
+import Item.Item;
 import Item.ItemView;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class ItemMenu {
     private Scanner scanner = new Scanner(System.in);
     private int option;
     private String key = "";
-    private ArrayList<ItemModel> results = new ArrayList<>();
+    private ArrayList<Item> results = new ArrayList<>();
     private boolean running;
     /**
      * The run() method is responsible for displaying the Item Management Menu.
@@ -54,15 +54,17 @@ public class ItemMenu {
 
             switch (option) {
                 case 1:
-                    view.printAllItems(controller.getAllItems(), key);
-                    view.pressAnyKeyPrompt();
+                    view.printAll(controller.getAllItems(), key);
+                    if (!controller.getAllItems().isEmpty()) {
+                        view.pressAnyKeyPrompt();
+                    }
                     break;
                 case 2:
-                    key = view.promptSearchKey();
+                    key = view.promptForSearchKey();
                     results = controller.searchItem(key);
-                    view.printAllItems(results, key);
+                    view.printAll(results, key);
                     if (!results.isEmpty()) {
-                        view.pressAnyKeyPromptSearch(key);
+                        view.pressAnyKeyPromptForSearch(key);
                     }
                     results.clear();
                     break;
