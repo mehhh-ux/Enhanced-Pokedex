@@ -1,7 +1,7 @@
 /**
  * MoveController.java is responsible for receiving and giving Move data.
  * Responsible for saving the list of all moves in the Pokedex and adding
-   new moves into the list.
+ new moves into the list.
  * Able to give a list of moves based on an operation or a method.
  */
 package Move;
@@ -13,7 +13,7 @@ public class MoveController {
      * A list of moves.
      * The ArrayList moves is used to keep track of all moves in the Pokedex.
      * The ArrayList results is used to hold a list of moves after using an operation
-       (for example the search function).
+     (for example the search function).
      */
     private ArrayList<Move> moves = Move.initializeMoveList();
     private ArrayList<Move> results = new ArrayList<>();
@@ -39,7 +39,7 @@ public class MoveController {
     /**
      * Search for a move or a list of moves based off from a key.
      * @param key is the input of the user that will be used to search if
-       a move has an attribute that matches said key.
+    a move has an attribute that matches said key.
      * @return the resulting list of moves.
      */
     public ArrayList<Move> searchMove(String key) {

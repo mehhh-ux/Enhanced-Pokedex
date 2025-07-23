@@ -5,6 +5,7 @@ package Move;
 
 import Interfaces.Displayable;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -18,7 +19,7 @@ public class MoveView implements Displayable<Move> {
     /**
      * promptMoveData() asks the user information about the move they want to add.
      * Once all information is gathered, this method then creates a new move object based
-       off of the user's input.
+     off of the user's input.
      * @return the newly created move object.
      */
     public Move promptMoveData(){
@@ -90,7 +91,7 @@ public class MoveView implements Displayable<Move> {
      * @param key is a string that is searched by the user (this is used with the search method)
      */
     @Override
-    public void printAll(ArrayList<Move> moves, String key){
+    public void printAll(ArrayList<Move> moves, String key) {
         if (moves.isEmpty() && !key.isEmpty()) {
             System.out.println("No move containing the word '" + key + "' in the Pokedex.");
             return;

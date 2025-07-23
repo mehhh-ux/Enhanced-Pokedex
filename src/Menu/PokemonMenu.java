@@ -12,6 +12,7 @@ import Pokemon.Pokemon;
 import Pokemon.PokemonController;
 import Pokemon.PokemonView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -73,7 +74,7 @@ public class PokemonMenu {
                     }
                     break;
                 case 2:
-                    view.printAll(controller.getAllPokemon(), key);
+                    view.printAll(controller.getAllPokemon(), key) ;
                     if (!controller.getAllPokemon().isEmpty()) {
                         view.pressAnyKeyPrompt();
                     }

@@ -167,4 +167,18 @@ public class Pokemon {
     public void cry() {
         System.out.println(name + " cries!");
     }
+
+    public Pokemon copy() {
+        Pokemon copy;
+        Stats copiedStats = new Stats(this.baseStats.getHp(), this.baseStats.getAtk(), this.baseStats.getDef(), this.baseStats.getSpd());
+
+        if (this.type2 == null){
+            copy = new Pokemon( this.pokedexNum, this.name, this.type1, this.baseLvl,
+                    this.evolvesFrom, this.evolveTo, this.evolutionLvl, copiedStats);
+        } else {
+            copy = new Pokemon( this.pokedexNum, this.name, this.type1, this.type2, this.baseLvl,
+                    this.evolvesFrom, this.evolveTo, this.evolutionLvl, copiedStats);
+        }
+        return copy;
+    }
 }

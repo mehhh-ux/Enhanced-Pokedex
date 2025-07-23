@@ -1,7 +1,7 @@
 /**
  * PokemonController.java is responsible for receiving and giving Pokemon data.
  * Responsible for saving the list of all moves in the Pokedex and adding
-   new moves into the list.
+ new moves into the list.
  * Able to give a list of moves based on an operation or a method.
  */
 package Pokemon;
@@ -13,7 +13,7 @@ public class PokemonController {
      * A list of pokemons.
      * The ArrayList pokemons is used to keep track of all pokemons in the Pokedex.
      * The ArrayList results is used to hold a list of moves after using an operation
-       (for example the search function).
+     (for example the search function).
      */
     private ArrayList<Pokemon> pokemons = new ArrayList<>();
     private ArrayList<Pokemon> results = new ArrayList<>();
@@ -38,7 +38,7 @@ public class PokemonController {
     /**
      * Search for a pokemon or a list of pokemons based off from a key.
      * @param key is the input of the user that will be used to search if
-       a pokemon has an attribute that matches said key.
+    a pokemon has an attribute that matches said key.
      * @return the resulting list of pokemons.
      */
     public ArrayList<Pokemon> searchPokemon(String key) {
@@ -56,9 +56,9 @@ public class PokemonController {
 
     /**
      * pokemonNumIsDup() checks through the ArrayList pokemons if there are any
-       pokemon objects with the same pokedexNum.
+     pokemon objects with the same pokedexNum.
      * @param pokedexNum is the number to check
-       (this comes from the user back in PokemonMenu.java).
+    (this comes from the user back in PokemonMenu.java).
      * @return a boolean value.
      */
     public boolean pokemonNumIsDup(int pokedexNum){
@@ -72,9 +72,9 @@ public class PokemonController {
 
     /**
      * pokemonNameIsDup() checks through the ArrayList pokemons if there are any
-       pokemon objects with the same pokedexName.
+     pokemon objects with the same pokedexName.
      * @param pokedexName is the name (String) to check
-       (this comes from the user back in PokemonMenu.java).
+    (this comes from the user back in PokemonMenu.java).
      * @return a boolean value.
      */
     public boolean pokemonNameIsDup(String pokedexName){
