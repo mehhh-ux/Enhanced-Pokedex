@@ -5,7 +5,7 @@ import Interfaces.Displayable;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class PokemonView implements Displayable<Pokemon> {
+public class PokemonView implements Displayable<Pokemon>{
     private Scanner scanner = new Scanner(System.in);
     private Stats stats;
     private String name, type1, type2;
@@ -40,7 +40,7 @@ public class PokemonView implements Displayable<Pokemon> {
 
     /**
      * promptPokedexNumber() asks the user for the Pokedex Number of the
-     pokemon they wish to add.
+       pokemon they wish to add.
      * @return the pokedexNum from user input.
      */
     public int promptPokedexNumber(){
@@ -52,7 +52,7 @@ public class PokemonView implements Displayable<Pokemon> {
 
     /**
      * promptPokemonName() asks the user for the name of the
-     pokemon they wish to add.
+       pokemon they wish to add.
      * @return the name from user input.
      */
     public String promptPokemonName(){
@@ -63,7 +63,7 @@ public class PokemonView implements Displayable<Pokemon> {
 
     /**
      * showDuplicationErrorMessage() prints an error message if one of the duplication
-     checks return true.
+       checks return true.
      * @param prompt is a String depending on the error.
      */
     public void showDuplicationErrorMessage(String prompt){
@@ -80,9 +80,9 @@ public class PokemonView implements Displayable<Pokemon> {
 
     /**
      * promptRemainingPokemonData() asks the user to provide all the other information
-     required to make their desired pokemon.
+       required to make their desired pokemon.
      * Once all required information is gathered, this method creates a new pokemon
-     object based off of the user's inputs.
+       object based off of the user's inputs.
      * @param pokedexNum is the pokedexNum from the previous prompt.
      * @param name is the pokemon name from the previous prompt.
      * @return the newly created pokemon object.
@@ -129,7 +129,7 @@ public class PokemonView implements Displayable<Pokemon> {
 
     @Override
     public void printAll(ArrayList<Pokemon> pokemons, String key) {
-        if (pokemons.isEmpty() && !key.isEmpty()) {
+        if (pokemons.isEmpty()) {
             System.out.println("No pokemon containing the word '" + key + "' in the Pokedex.");
             return;
         }else if(pokemons.isEmpty()) {

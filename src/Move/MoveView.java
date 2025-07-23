@@ -5,7 +5,6 @@ package Move;
 
 import Interfaces.Displayable;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
