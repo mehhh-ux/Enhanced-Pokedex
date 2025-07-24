@@ -54,35 +54,45 @@ public class PokemonController {
         return results;
     }
 
-    /**
-     * pokemonNumIsDup() checks through the ArrayList pokemons if there are any
-     pokemon objects with the same pokedexNum.
-     * @param pokedexNum is the number to check
-    (this comes from the user back in PokemonMenu.java).
-     * @return a boolean value.
-     */
-    public boolean pokemonNumIsDup(int pokedexNum){
-        for (Pokemon p: pokemons){
-            if (p.getPokedexNum() == pokedexNum){
+    public boolean isDuplicate(int pokedexNum, String name) {
+        for (Pokemon p : pokemons) {
+            if (p.getPokedexNum() == pokedexNum || p.getName() == name) {
                 return true;
             }
         }
+
         return false;
     }
 
-    /**
-     * pokemonNameIsDup() checks through the ArrayList pokemons if there are any
-     pokemon objects with the same pokedexName.
-     * @param pokedexName is the name (String) to check
-    (this comes from the user back in PokemonMenu.java).
-     * @return a boolean value.
-     */
-    public boolean pokemonNameIsDup(String pokedexName){
-        for (Pokemon p: pokemons){
-            if (p.getName().equalsIgnoreCase(pokedexName)){
-                return true;
-            }
-        }
-        return false;
-    }
+//    /**
+//     * pokemonNumIsDup() checks through the ArrayList pokemons if there are any
+//     pokemon objects with the same pokedexNum.
+//     * @param pokedexNum is the number to check
+//    (this comes from the user back in PokemonMenu.java).
+//     * @return a boolean value.
+//     */
+//    public boolean pokemonNumIsDup(int pokedexNum){
+//        for (Pokemon p: pokemons){
+//            if (p.getPokedexNum() == pokedexNum){
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
+//    /**
+//     * pokemonNameIsDup() checks through the ArrayList pokemons if there are any
+//     pokemon objects with the same pokedexName.
+//     * @param pokedexName is the name (String) to check
+//    (this comes from the user back in PokemonMenu.java).
+//     * @return a boolean value.
+//     */
+//    public boolean pokemonNameIsDup(String pokedexName){
+//        for (Pokemon p: pokemons){
+//            if (p.getName().equalsIgnoreCase(pokedexName)){
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 }

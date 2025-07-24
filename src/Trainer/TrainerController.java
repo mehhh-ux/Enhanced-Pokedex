@@ -1,6 +1,7 @@
 package Trainer;
 
 import Item.Item;
+import Move.Move;
 import Pokemon.Pokemon;
 
 import java.util.ArrayList;
@@ -103,6 +104,7 @@ public class TrainerController {
 
         existsInTheStorage = t.getStorage().stream().anyMatch(existing -> existing.getName().equalsIgnoreCase(pStorage.getName()));
         existsInTheLineup = t.getLineup().stream().anyMatch(existing -> existing.getName().equalsIgnoreCase(pLineup.getName()));
+
         if (!existsInTheStorage){
             System.out.println(pStorage.getName() + " currently isn't in " + t.getName() + "'s storage.");
             return false;
@@ -167,5 +169,95 @@ public class TrainerController {
         return true;
     }
 
-    public boolean teachMoves()
+
+    public Pokemon pokemonFromStorage(Trainer t, Pokemon p){
+        for (Pokemon poke: t.getStorage()){
+            if (poke.getName().equalsIgnoreCase(p.getName())){
+                return poke;
+            }
+        }
+        return null;
+    }
+
+    public Pokemon pokemonFromLineup(Trainer t, Pokemon p){
+        for (Pokemon poke: t.getLineup()){
+            if (poke.getName().equalsIgnoreCase(p.getName())){
+                return poke;
+            }
+        }
+        return null;
+    }
+
+    public boolean teachMoves(Trainer t, Pokemon p, Move m){
+        Pokemon actual = null;
+
+        actual = pokemonFromLineup(t, p);
+
+        if (actual == null){
+            actual = pokemonFromStorage(t, p);
+        }
+
+        if (actual == null) {
+            System.out.println("Error: " + p.getName() + " is not in " + t.getName() + "'s lineup or storage.");
+            return false;
+        }
+
+        for (Move move: actual.getMoveSet()){
+            if (move.getName().equalsIgnoreCase(m.getName()) && move.getClassification().equalsIgnoreCase(m.getClassification())){
+                System.out.println(actual.getName() + " already knows " + m.getName());
+                return false;
+            }
+        }
+
+        if (actual.getMoveSet().size() >= 6){
+            System.out.println(p.getName() + " already learned a maximum of 4 learnable moves. Remove a move first.");
+            return false;
+        }
+        if (!(actual.getType1().equalsIgnoreCase(m.getClassification()) || (actual.getType2() != null && actual.getType2().equalsIgnoreCase(m.getClassification())))){
+            System.out.println("Error: " + m.getName() + " is incomaptible with " + actual.getName() + ".");
+            return false;
+        }
+
+        actual.getMoveSet().add(m);
+        return true;
+    }
+
+    public boolean removeMove(Trainer t, Pokemon p, Move m){
+        Pokemon actual = null;
+        Move toRemove = null;
+
+        actual = pokemonFromLineup(t, p);
+
+        if (actual == null){
+            actual = pokemonFromStorage(t, p);
+        }
+
+        if (actual == null) {
+            System.out.println("Error: " + p.getName() + " is not in " + t.getName() + "'s lineup or storage.");
+            return false;
+        }
+
+        for (Move move: actual.getMoveSet()){
+            if (move.getName().equalsIgnoreCase(m.getName()) && move.getClassification().equalsIgnoreCase(m.getClassification())){
+                toRemove = move;
+                break;
+            }
+        }
+
+        if (toRemove == null){
+            System.out.println(p.getName() + " does not know the move " + m.getName() + ".");
+            return false;
+        }
+        if (actual.getMoveSet().size() <= 2){
+            System.out.println(p.getName() + " already forgot all of the learnable moves. Add a move first.");
+            return false;
+        }
+        if (toRemove.getClassification().equalsIgnoreCase("HM")){
+            System.out.println("Unable to forget " + m.getName() + "since it is of" + m.getClassification() + "classification.");
+            return false;
+        }
+
+        actual.getMoveSet().remove(toRemove);
+        return true;
+    }
 }

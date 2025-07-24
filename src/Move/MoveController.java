@@ -54,4 +54,14 @@ public class MoveController {
         }
         return results;
     }
+
+    public boolean moveNameIsDup(String name) {
+        for (Move m : moves) {
+            if (m.getName() == name) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

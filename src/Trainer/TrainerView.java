@@ -1,6 +1,5 @@
 package Trainer;
 
-import Interfaces.Displayable;
 import Pokemon.PokemonView;
 import Pokemon.Pokemon;
 
