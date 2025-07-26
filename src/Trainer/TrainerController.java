@@ -209,8 +209,8 @@ public class TrainerController {
             }
         }
 
-        if (actual.getMoveSet().size() >= 6){
-            System.out.println(p.getName() + " already learned a maximum of 4 learnable moves. Remove a move first.");
+        if (actual.getMoveSet().size() >= 4){
+            System.out.println(p.getName() + " already learned a maximum of 4 moves. Remove a move first.");
             return false;
         }
         if (!(actual.getType1().equalsIgnoreCase(m.getClassification()) || (actual.getType2() != null && actual.getType2().equalsIgnoreCase(m.getClassification())))){
@@ -248,8 +248,8 @@ public class TrainerController {
             System.out.println(p.getName() + " does not know the move " + m.getName() + ".");
             return false;
         }
-        if (actual.getMoveSet().size() <= 2){
-            System.out.println(p.getName() + " already forgot all of the learnable moves. Add a move first.");
+        if (actual.getMoveSet().isEmpty()){
+            System.out.println(p.getName() + " already forgot all of the moves. Add a move first.");
             return false;
         }
         if (toRemove.getClassification().equalsIgnoreCase("HM")){

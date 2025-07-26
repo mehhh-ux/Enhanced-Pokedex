@@ -84,8 +84,8 @@ public class Move {
      */
     public static ArrayList<Move> initializeMoveList(){
         ArrayList<Move> moves = new ArrayList<>();
-        moves.add(new Move("Tackle", "The user charges and slams into the opponent with its body.", null, "Normal"));
-        moves.add(new Move("Defend", "Enters a defensive stance.", null, "Normal"));
+        moves.add(new Move("Tackle", "The user charges and slams into the opponent with its body.", "TM", "Normal"));
+        moves.add(new Move("Defend", "Enters a defensive stance.", "TM", "Normal"));
         return moves;
     }
 }

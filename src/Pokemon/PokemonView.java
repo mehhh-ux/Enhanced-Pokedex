@@ -1,26 +1,50 @@
 package Pokemon;
 
+import Item.ItemController;
 import Move.MoveController;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.util.Objects;
 import java.util.ArrayList;
 
 public class PokemonView extends JFrame {
-    private PokemonController controller;
+    private PokemonController pokemonController;
+    private MoveController moveController;
+    private ItemController itemController;
 
-    public PokemonView(PokemonController controller) {
-        this.controller = controller;
+    private JTable table;
+    private DefaultTableModel tableModel;
+
+    private JTextField tfPokedexNum, tfName, tfType1, tfType2, tfBaseLvl;
+    private JTextField tfEvolvesFrom, tfEvolvesTo, tfEvolutionLvl;
+    private JTextField tfHP, tfATK, tfDEF, tfSPD;
+
+    public PokemonView(PokemonController controller, MoveController moveController, ItemController itemController) {
+        this.pokemonController = controller;
+        this.moveController = moveController;
+        this.itemController = itemController;
+
         setTitle("Pokemon Menu");
         setExtendedState(MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         JTabbedPane tabbedPane = new JTabbedPane();
+
         tabbedPane.addTab("Add Pokemon", createAddPokemonPanel());
         tabbedPane.addTab("Show All Pokemon", createShowAllPanel());
+
+        tabbedPane.addChangeListener(e -> {
+            int selectedIndex = tabbedPane.getSelectedIndex();
+            String selectedTitle = tabbedPane.getTitleAt(selectedIndex);
+            if (selectedTitle.equals("Add Pokemon")) {
+                clearFields();
+            }
+            else if (selectedTitle.equals("Show All Pokemon")){
+                refreshTableData();
+            }
+        });
 
         add(tabbedPane);
         setVisible(true);
@@ -30,18 +54,18 @@ public class PokemonView extends JFrame {
         JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JTextField tfPokedexNum = new JTextField();
-        JTextField tfName = new JTextField();
-        JTextField tfType1 = new JTextField();
-        JTextField tfType2 = new JTextField();
-        JTextField tfBaseLvl = new JTextField();
-        JTextField tfEvolvesFrom = new JTextField();
-        JTextField tfEvolvesTo = new JTextField();
-        JTextField tfEvolutionLvl = new JTextField();
-        JTextField tfHP = new JTextField();
-        JTextField tfATK = new JTextField();
-        JTextField tfDEF = new JTextField();
-        JTextField tfSPD = new JTextField();
+        tfPokedexNum = new JTextField();
+        tfName = new JTextField();
+        tfType1 = new JTextField();
+        tfType2 = new JTextField();
+        tfBaseLvl = new JTextField();
+        tfEvolvesFrom = new JTextField();
+        tfEvolvesTo = new JTextField();
+        tfEvolutionLvl = new JTextField();
+        tfHP = new JTextField();
+        tfATK = new JTextField();
+        tfDEF = new JTextField();
+        tfSPD = new JTextField();
 
         panel.add(new JLabel("Pokedex Number:"));
         panel.add(tfPokedexNum);
@@ -53,11 +77,11 @@ public class PokemonView extends JFrame {
         panel.add(tfType2);
         panel.add(new JLabel("Base Level:"));
         panel.add(tfBaseLvl);
-        panel.add(new JLabel("Evolves From (Pokedex #):"));
+        panel.add(new JLabel("Evolves From (Enter Pokedex Num [0 if none]):"));
         panel.add(tfEvolvesFrom);
-        panel.add(new JLabel("Evolves To (Pokedex #):"));
+        panel.add(new JLabel("Evolves To (Enter Pokedex Num [0 if none]):"));
         panel.add(tfEvolvesTo);
-        panel.add(new JLabel("Evolution Level:"));
+        panel.add(new JLabel("Evolution Level (Enter 0 if none):"));
         panel.add(tfEvolutionLvl);
         panel.add(new JLabel("HP:"));
         panel.add(tfHP);
@@ -68,8 +92,18 @@ public class PokemonView extends JFrame {
         panel.add(new JLabel("SPD:"));
         panel.add(tfSPD);
 
+        JButton btnAdd = getAddPokemonButton();
+        JButton rtnBtn = getReturnButton();
+
+        panel.add(rtnBtn);
+        panel.add(btnAdd);
+
+        return panel;
+    }
+
+    private JButton getAddPokemonButton() {
         JButton btnAdd = new JButton("Add Pokemon");
-        btnAdd.addActionListener((ActionEvent e) -> {
+        btnAdd.addActionListener((e) -> {
             try {
                 int pokedexNum = Integer.parseInt(tfPokedexNum.getText());
                 String name = tfName.getText();
@@ -87,8 +121,13 @@ public class PokemonView extends JFrame {
 
                 Stats stats = new Stats(hp, atk, def, spd);
 
-                if (controller.isDuplicate(pokedexNum, name)) {
-                    JOptionPane.showMessageDialog(this, "Duplicate Pokedex number or name found!");
+                if (pokemonController.pokemonNumIsDup(pokedexNum)) {
+                    JOptionPane.showMessageDialog(this, "Duplicate Pokedex number found!");
+                    return;
+                }
+
+                if (pokemonController.pokemonNameIsDup(name)) {
+                    JOptionPane.showMessageDialog(this, "Duplicate Pokemon name found!");
                     return;
                 }
 
@@ -96,43 +135,96 @@ public class PokemonView extends JFrame {
                         new Pokemon(pokedexNum, name, type1, baseLvl, evolvesFrom, evolvesTo, evolutionLvl, stats) :
                         new Pokemon(pokedexNum, name, type1, type2, baseLvl, evolvesFrom, evolvesTo, evolutionLvl, stats);
 
-                controller.addPokemon(newPokemon);
+                pokemonController.addPokemon(newPokemon);
                 JOptionPane.showMessageDialog(this, "Successfully added " + name + "!", "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception exception) {
                 JOptionPane.showMessageDialog(this, "Invalid input!");
             }
         });
-
-        panel.add(new JLabel());
-        panel.add(btnAdd);
-
-        return panel;
+        return btnAdd;
     }
 
-    private JPanel createShowAllPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        JTextArea textArea = new JTextArea();
-        textArea.setEditable(false);
-        JButton refreshBtn = new JButton("Refresh");
-
-        refreshBtn.addActionListener(e -> {
-            StringBuilder sb = new StringBuilder();
-            for (Pokemon p : controller.getAllPokemon()) {
-                sb.append("[" + p.getPokedexNum() + "] " + p.getName())
-                        .append(" (" + p.getType1());
-                if (p.getType2() != null) {
-                    sb.append("/" + p.getType2());
-                }
-                sb.append(")\n");
-            }
-            textArea.setText(sb.toString());
+    private JButton getReturnButton(){
+        JButton exitBtn = new JButton("Return to Pokedex Main Menu");
+        exitBtn.addActionListener(e -> {
+            dispose();
+            new Main.MainGUI(this.pokemonController, this.moveController, this.itemController);
         });
 
-        panel.add(new JScrollPane(textArea), BorderLayout.CENTER);
+        return exitBtn;
+    }
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(refreshBtn);
+    private Object[][] getPokemonTableData(ArrayList<Pokemon> pokemons){
+        Object[][] data = new Object[pokemons.size()][12];
 
+        for (int i = 0; i < pokemons.size(); i++) {
+            Pokemon p = pokemons.get(i);
+            data[i][0] = String.format("%04d", p.getPokedexNum());
+            data[i][1] = p.getName();
+            data[i][2] = p.getType1();
+            data[i][3] = (p.getType2() != null) ? p.getType2() : "---";
+            data[i][4] = p.getBaseLvl();
+            data[i][5] = (p.getEvolvesFrom() != 0) ? String.format("%04d", p.getEvolvesFrom()) : "---";
+            data[i][6] = (p.getEvolvesTo() != 0) ? String.format("%04d", p.getEvolvesTo()) : "---";
+            data[i][7] = (p.getEvolutionLvl() != 0) ? p.getEvolutionLvl() : "-";
+            data[i][8] = p.getBaseStats().getHp();
+            data[i][9] = p.getBaseStats().getAtk();
+            data[i][10] = p.getBaseStats().getDef();
+            data[i][11] = p.getBaseStats().getSpd();
+        }
+        return data;
+    }
+
+    private JScrollPane getJScrollPane(ArrayList<Pokemon> pokemons) {
+        String[] columnNames = {
+                "Pokedex Number", "Name", "Type 1", "Type 2", "Base Level", "Evolves From",
+                "Evolves To", "Evolution Level", "HP", "ATK", "DEF", "SPD"
+        };
+
+        Object[][] data = getPokemonTableData(pokemons);
+
+        tableModel = new DefaultTableModel(data, columnNames){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
+        table = new JTable(tableModel);
+        table.setAutoCreateRowSorter(true);
+        table.setFillsViewportHeight(true);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(800,300));
+
+        return scrollPane;
+    }
+
+    private void clearFields(){
+        tfPokedexNum.setText("");
+        tfName.setText("");
+        tfType1.setText("");
+        tfType2.setText("");
+        tfBaseLvl.setText("");
+        tfEvolvesFrom.setText("");
+        tfEvolvesTo.setText("");
+        tfEvolutionLvl.setText("");
+        tfHP.setText("");
+        tfATK.setText("");
+        tfDEF.setText("");
+        tfSPD.setText("");
+    }
+
+    private void refreshTableData(){
+        if (tableModel != null){
+            Object[][] newData = getPokemonTableData(pokemonController.getAllPokemon());
+            tableModel.setRowCount(0);
+            for (Object[] row: newData) {
+                tableModel.addRow(row);
+            }
+        }
+    }
+
+    private JButton getJButton() {
         JButton searchBtn = new JButton("Search Pokemon");
         searchBtn.addActionListener(e -> {
             String key = JOptionPane.showInputDialog(this, "Enter a search keyword (ID, name, or type):");
@@ -140,198 +232,36 @@ public class PokemonView extends JFrame {
                 return;
             }
 
-            ArrayList<Pokemon> results = controller.searchPokemon(key.trim().toLowerCase());
+            ArrayList<Pokemon> results = pokemonController.searchPokemon(key.trim().toLowerCase());
 
             if (results.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No pokemon containing the word '" + key.trim() + "' in the Pokedex.", "Search Failed", JOptionPane.ERROR_MESSAGE);
             } else {
-                StringBuilder sb = new StringBuilder();
-                for (Pokemon p : results) {
-                    sb.append("[" + p.getPokedexNum() + "] " + p.getName())
-                            .append(" (" + p.getType1());
-                    if (p.getType2() != null) {
-                        sb.append("/" + p.getType2());
-                    }
-                    sb.append(")\n");
-                }
-
-                JTextArea resultArea = new JTextArea(sb.toString());
-                resultArea.setEditable(false);
-                JScrollPane scrollPane = new JScrollPane(resultArea);
-                scrollPane.setPreferredSize(new Dimension(800, 600));
-                JOptionPane.showMessageDialog(this, scrollPane, "Search Results", JOptionPane.INFORMATION_MESSAGE);
+                JScrollPane resultScroll = getJScrollPane(results);
+                JOptionPane.showMessageDialog(this, resultScroll, "Search Results for '" + key.trim() + "'", JOptionPane.INFORMATION_MESSAGE);
             }
+
+            results.clear();
         });
+        return searchBtn;
+    }
+
+    private JPanel createShowAllPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        JPanel buttonPanel = new JPanel();
+
+        JScrollPane scrollPane = getJScrollPane(pokemonController.getAllPokemon());
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        JButton searchBtn = getJButton();
 
         buttonPanel.add(searchBtn);
 
-        JButton exitBtn = new JButton("Exit");
-        exitBtn.addActionListener(e -> {
-            dispose();
-            new Main.MainGUI(new PokemonController(), new MoveController());
-        });
+        JButton rtnBtn = getReturnButton();
 
-        buttonPanel.add(exitBtn);
+        buttonPanel.add(rtnBtn);
         panel.add(buttonPanel, BorderLayout.SOUTH);
 
         return panel;
     }
 }
-//    /**
-//     * Header for displaying pokemons and their attributes.
-//     */
-//    @Override
-//    public void printHeader() {
-//        System.out.printf(
-//                "\n%-15s%-20s%-15s%-15s%-12s%-15s%-15s%-18s%-5s%-5s%-5s%-5s\n",
-//                "Pokedex Number", "Name", "Type 1", "Type 2", "Base Level",
-//                "Evolves From", "Evolves To", "Evolution Level", "HP", "ATK", "DEF", "SPD");
-//        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
-//    }
-//
-//    /**
-//     * Displays all attributes of the pokemon.
-//     * @param pokemon contains the Pokemon class which the attributes will be printed
-//     */
-//    @Override
-//    public void displayAttributes(Pokemon pokemon) {
-//        System.out.printf(
-//                "%-15d%-20s%-15s%-15s%-12d%-15s%-15s%-18s%-5d%-5d%-5d%-5d\n",
-//                pokemon.getPokedexNum(), pokemon.getName(), pokemon.getType1(), pokemon.getType2() != null ? pokemon.getType2() : "------",
-//                pokemon.getBaseLvl(), (pokemon.getEvolvesFrom() != 0 ? String.format("%d", pokemon.getEvolvesFrom()) : "------------"),
-//                (pokemon.getEvolvesTo() != 0 ? String.format("%d", pokemon.getEvolvesTo()) : "----------"),
-//                (pokemon.getEvolutionLvl() != 0 ? String.format("%d", pokemon.getEvolutionLvl()) : "---------------"),
-//                pokemon.getBaseStats().getHp(), pokemon.getBaseStats().getAtk(), pokemon.getBaseStats().getDef(), pokemon.getBaseStats().getSpd());
-//    }
-//
-//    /**
-//     * promptPokedexNumber() asks the user for the Pokedex Number of the
-//       pokemon they wish to add.
-//     * @return the pokedexNum from user input.
-//     */
-//    public int promptPokedexNumber(){
-//        System.out.print("Pokedex Number: ");
-//        pokedexNum = scanner.nextInt();
-//        scanner.nextLine();
-//        return pokedexNum;
-//    }
-//
-//    /**
-//     * promptPokemonName() asks the user for the name of the
-//       pokemon they wish to add.
-//     * @return the name from user input.
-//     */
-//    public String promptPokemonName(){
-//        System.out.print("Pokemon Name: ");
-//        name = scanner.nextLine();
-//        return name;
-//    }
-//
-//    /**
-//     * showDuplicationErrorMessage() prints an error message if one of the duplication
-//       checks return true.
-//     * @param prompt is a String depending on the error.
-//     */
-//    public void showDuplicationErrorMessage(String prompt){
-//        System.out.println("Invalid " + prompt + ". No duplication of " + prompt + " allowed.");
-//    }
-//
-//    /**
-//     * successfulPokemonAddMessage() prints a message if the addition of pokemon is successful
-//     * @param name is a String depending on the pokemon name.
-//     */
-//    public void successfulPokemonAddMessage(String name){
-//        System.out.println("Successfully added " + name + "!");
-//    }
-//
-//    /**
-//     * promptRemainingPokemonData() asks the user to provide all the other information
-//       required to make their desired pokemon.
-//     * Once all required information is gathered, this method creates a new pokemon
-//       object based off of the user's inputs.
-//     * @param pokedexNum is the pokedexNum from the previous prompt.
-//     * @param name is the pokemon name from the previous prompt.
-//     * @return the newly created pokemon object.
-//     */
-//    public Pokemon promptRemainingPokemonData(int pokedexNum, String name) {
-//        this.pokedexNum = pokedexNum;
-//        this.name = name;
-//        System.out.print("Type 1: ");
-//        type1 = scanner.nextLine();
-//        System.out.print("Type 2 (Press enter to skip): ");
-//        type2 = scanner.nextLine();
-//        type2 = type2.isEmpty() ? null : type2;
-//        System.out.print("Base Level: ");
-//        baseLvl = scanner.nextInt();
-//        scanner.nextLine();
-//        System.out.print("Evolves From (Enter 0 if none): ");
-//        evolvesFrom = scanner.nextInt();
-//        scanner.nextLine();
-//        System.out.print("Evolves To (Enter 0 if none): ");
-//        evolvesTo = scanner.nextInt();
-//        scanner.nextLine();
-//        System.out.print("Evolution Level (Enter 0 if none): ");
-//        evolutionLvl = scanner.nextInt();
-//        scanner.nextLine();
-//        System.out.print("Base HP: ");
-//        hp = scanner.nextInt();
-//        scanner.nextLine();
-//        System.out.print("Base ATK: ");
-//        atk = scanner.nextInt();
-//        scanner.nextLine();
-//        System.out.print("Base DEF: ");
-//        def = scanner.nextInt();
-//        scanner.nextLine();
-//        System.out.print("Base SPD: ");
-//        spd = scanner.nextInt();
-//        scanner.nextLine();
-//
-//        stats = new Stats(hp, atk, def, spd);
-//
-//        return (type2 == null)
-//                ? new Pokemon(pokedexNum, name, type1, baseLvl, evolvesFrom, evolvesTo, evolutionLvl, stats)
-//                : new Pokemon(pokedexNum, name, type1, type2, baseLvl, evolvesFrom, evolvesTo, evolutionLvl, stats);
-//    }
-//
-//    @Override
-//    public void printAll(ArrayList<Pokemon> pokemons, String key) {
-//        if (pokemons.isEmpty()) {
-//            System.out.println("No pokemon containing the word '" + key + "' in the Pokedex.");
-//            return;
-//        }else if(pokemons.isEmpty()) {
-//            System.out.println("No pokemon to show in the pokedex.");
-//            return;
-//        }
-//        printHeader();
-//        for (Pokemon p : pokemons) {
-//            displayAttributes(p);
-//        }
-//    }
-//
-//    @Override
-//    public String promptForSearchKey() {
-//        System.out.println("\nYou are in the process of searching a pokemon!");
-//        System.out.println("---------------------------------------------");
-//        System.out.print("Enter a search keyword: ");
-//        return scanner.nextLine();
-//    }
-//
-//    /**
-//     * Asks the user to press enter to continue.
-//     */
-//    @Override
-//    public void pressAnyKeyPrompt(){
-//        System.out.print("Displayed all pokemon/s available in the Pokedex.\nPress Enter to continue...");
-//        scanner.nextLine();
-//    }
-//
-//    /**
-//     * Asks the user to press enter to continue after searching for a pokemon.
-//     * @param key is a string that is searched by the user
-//     */
-//    @Override
-//    public void pressAnyKeyPromptForSearch(String key){
-//        System.out.print("Displayed all pokemon/s containing the word/number '" + key + "' in the Pokedex.\nPress Enter to continue...");
-//        scanner.nextLine();
-//    }
-//}

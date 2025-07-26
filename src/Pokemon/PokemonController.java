@@ -54,9 +54,19 @@ public class PokemonController {
         return results;
     }
 
-    public boolean isDuplicate(int pokedexNum, String name) {
+    public boolean pokemonNumIsDup(int pokedexNum) {
         for (Pokemon p : pokemons) {
-            if (p.getPokedexNum() == pokedexNum || p.getName() == name) {
+            if (p.getPokedexNum() == pokedexNum) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean pokemonNameIsDup(String name) {
+        for (Pokemon p : pokemons) {
+            if (p.getName().equalsIgnoreCase(name)) {
                 return true;
             }
         }
