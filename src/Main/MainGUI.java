@@ -5,7 +5,7 @@ import Item.ItemView;
 import Pokemon.PokemonController;
 import Pokemon.PokemonView;
 import Move.MoveController;
-//import Move.MoveView;
+import Move.MoveView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,6 +27,7 @@ public class MainGUI extends JFrame {
 
     private void iniGUI() {
         setTitle("Enhanced Pokedex - Main Menu");
+        setResizable(false);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -55,8 +56,8 @@ public class MainGUI extends JFrame {
         });
 
         btnMoveMenu.addActionListener(e -> {
-//            new MoveView(pController, mController, iController);
-//            this.dispose();
+            new MoveView(pController, mController, iController);
+            this.dispose();
         });
 
         btnItemMenu.addActionListener(e -> {

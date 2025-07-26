@@ -26,6 +26,7 @@ public class PokemonView extends JFrame {
         this.itemController = itemController;
 
         setTitle("Pokemon Menu");
+        setResizable(false);
         setExtendedState(MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -137,6 +138,7 @@ public class PokemonView extends JFrame {
 
                 pokemonController.addPokemon(newPokemon);
                 JOptionPane.showMessageDialog(this, "Successfully added " + name + "!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                clearFields();
             } catch (Exception exception) {
                 JOptionPane.showMessageDialog(this, "Invalid input!");
             }
@@ -192,6 +194,7 @@ public class PokemonView extends JFrame {
         table = new JTable(tableModel);
         table.setAutoCreateRowSorter(true);
         table.setFillsViewportHeight(true);
+        table.getTableHeader().setReorderingAllowed(false);
 
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(800,300));

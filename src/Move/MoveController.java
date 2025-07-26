@@ -43,6 +43,7 @@ public class MoveController {
      * @return the resulting list of moves.
      */
     public ArrayList<Move> searchMove(String key) {
+        ArrayList<Move> results = new ArrayList<>();
         key = key.toLowerCase();
         for (Move m : moves) {
             if (m.getName().toLowerCase().contains(key) ||

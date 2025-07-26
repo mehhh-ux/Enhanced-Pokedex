@@ -27,6 +27,7 @@ public class ItemView extends JFrame{
         this.moveController = moveController;
         this.itemController = itemController;
         setTitle("Item Menu");
+        setResizable(false);
         setExtendedState(MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -94,6 +95,7 @@ public class ItemView extends JFrame{
         table = new JTable(tableModel);
         table.setAutoCreateRowSorter(true);
         table.setFillsViewportHeight(true);
+        table.getTableHeader().setReorderingAllowed(false);
 
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(800,300));

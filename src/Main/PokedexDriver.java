@@ -5,7 +5,6 @@
  */
 package Main;
 
-import Item.Item;
 import Item.ItemController;
 import Move.MoveController;
 import Pokemon.PokemonController;
