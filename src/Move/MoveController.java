@@ -6,6 +6,10 @@
  */
 package Move;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class MoveController {
@@ -64,5 +68,77 @@ public class MoveController {
         }
 
         return false;
+    }
+
+    public Move getMoveByName(String name) {
+        for (Move m : moves) {
+            if (m.getName().equalsIgnoreCase(name)) {
+                return m;
+            }
+        }
+
+        return null;
+    }
+
+    public void loadFromFile(String filename) throws Exception {
+        moves.clear();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            boolean inMoveSection = false;
+
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+
+                if (line.equals("MOVE:")) {
+                    inMoveSection = true;
+                    continue;
+                }
+
+                if (!inMoveSection) {
+                    continue;
+                }
+
+                if (line.isEmpty()) {
+                    continue;
+                }
+
+                String[] parts = line.split(",", -1);
+
+                if (parts.length < 4) {
+                    throw new Exception("Invalid move data: " + line);
+                }
+
+                String name = parts[0].trim();
+                String desc = parts[1].trim();
+                String classification = parts[2].trim();
+                String type1 = parts[3].trim();
+                String type2 = parts[4].trim();
+                if (type2.equalsIgnoreCase("null") || type2.isEmpty()) {
+                    type2 = null;
+                }
+
+                Move m = new Move(name, desc, classification, type1, type2);
+                moves.add(m);
+            }
+        }
+    }
+
+    public void saveToFile(String filename) throws Exception {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (Move m : moves) {
+                StringBuilder sb = new StringBuilder();
+                writer.write("MOVE:\n");
+
+                sb.append(m.getName()).append(",");
+                sb.append(m.getDescription()).append(",");
+                sb.append(m.getClassification()).append(",");
+                sb.append(m.getType1()).append(",");
+                sb.append(m.getType2() != null ? m.getType2() : "");
+
+                writer.write(sb.toString());
+                writer.newLine();
+            }
+        }
     }
 }

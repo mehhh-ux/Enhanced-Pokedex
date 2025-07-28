@@ -22,6 +22,8 @@ public class MainGUI extends JFrame {
         this.mController = mController;
         this.iController = iController;
 
+        FileIO fileIO = new FileIO(pController, mController, iController);
+        fileIO.loadSaveFile(this);
         iniGUI();
     }
 
@@ -64,7 +66,6 @@ public class MainGUI extends JFrame {
             new ItemView(pController, mController, iController);
             this.dispose();
         });
-
 
 
         btnExit.addActionListener(e -> System.exit(0));

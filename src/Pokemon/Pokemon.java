@@ -161,6 +161,10 @@ public class Pokemon {
         return heldItem;
     }
 
+    public void setHeldItem(Item item) {
+        this.heldItem = item;
+    }
+
     /**
      * Prints a message that says that the pokemon cried.
      */

@@ -5,6 +5,10 @@
  */
 package Item;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class ItemController {
@@ -43,5 +47,72 @@ public class ItemController {
             }
         }
         return results;
+    }
+
+    public Item getItemByName(String name) {
+        for (Item i : items) {
+            if (i.getName().equalsIgnoreCase(name)) {
+                return i;
+            }
+        }
+
+        return null;
+    }
+
+    public void loadFromFile(String filename) throws Exception {
+        items.clear();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            boolean inItemSection = false;
+
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+
+                if (line.equals("ITEM:")) {
+                    inItemSection = true;
+                    continue;
+                }
+
+                if (!inItemSection) {
+                    continue;
+                }
+
+                if (line.isEmpty()) {
+                    continue;
+                }
+
+                String[] parts = line.split(",");
+
+                String name = parts[0].trim();
+                String category = parts[1].trim();
+                String desc = parts[2].trim();
+                String effect = parts[3].trim();
+                double buyingPrice = Double.parseDouble(parts[4].trim());
+                double sellingPrice = Double.parseDouble(parts[5].trim());
+
+                Item i = new Item(name, category, desc, effect, buyingPrice, sellingPrice);
+                items.add(i);
+            }
+        }
+    }
+
+    public void saveToFile(String filename) throws Exception {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (Item i : items) {
+                StringBuilder sb = new StringBuilder();
+                writer.write("ITEM:\n");
+
+                sb.append(i.getName()).append(",");
+                sb.append(i.getCategory()).append(",");
+                sb.append(i.getDescription()).append(",");
+                sb.append(i.getEffect()).append(",");
+                sb.append(i.getBuyingPrice()).append(",");
+                sb.append(i.getSellingPrice()).append(",");
+
+                writer.write(sb.toString());
+                writer.newLine();
+            }
+        }
     }
 }
