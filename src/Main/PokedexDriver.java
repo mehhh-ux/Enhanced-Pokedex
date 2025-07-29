@@ -11,10 +11,14 @@ import Pokemon.PokemonController;
 
 public class PokedexDriver {
     public static void main(String[] args) {
-        PokemonController pController = new PokemonController();
-        MoveController mController = new MoveController();
-        ItemController iController = new ItemController();
+        try {
+            MoveController mController = new MoveController();
+            ItemController iController = new ItemController();
+            PokemonController pController = new PokemonController(mController, iController);
 
-        new MainGUI(pController, mController, iController);
+            new MainGUI(pController, mController, iController);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 }

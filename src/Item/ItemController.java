@@ -82,7 +82,11 @@ public class ItemController {
                     continue;
                 }
 
-                String[] parts = line.split(",");
+                String[] parts = line.split("\\|");
+
+                if (parts.length < 6) {
+                    continue;
+                }
 
                 String name = parts[0].trim();
                 String category = parts[1].trim();
@@ -99,16 +103,16 @@ public class ItemController {
 
     public void saveToFile(String filename) throws Exception {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            writer.write("ITEM:\n");
             for (Item i : items) {
                 StringBuilder sb = new StringBuilder();
-                writer.write("ITEM:\n");
 
-                sb.append(i.getName()).append(",");
-                sb.append(i.getCategory()).append(",");
-                sb.append(i.getDescription()).append(",");
-                sb.append(i.getEffect()).append(",");
-                sb.append(i.getBuyingPrice()).append(",");
-                sb.append(i.getSellingPrice()).append(",");
+                sb.append(i.getName()).append("|");
+                sb.append(i.getCategory()).append("|");
+                sb.append(i.getDescription()).append("|");
+                sb.append(i.getEffect()).append("|");
+                sb.append(i.getBuyingPrice()).append("|");
+                sb.append(i.getSellingPrice()).append("|");
 
                 writer.write(sb.toString());
                 writer.newLine();

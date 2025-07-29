@@ -1,0 +1,68 @@
+ITEM:
+HP Up|Vitamin|A nutritious drink for Pokémon.|+10 HP EVs|10000.0|5000.0|
+Protein|Vitamin|A nutritious drink for Pokémon.|+10 Attack EVs|10000.0|5000.0|
+Iron|Vitamin|A nutritious drink for Pokémon.|+10 Defense EVs|10000.0|5000.0|
+Carbos|Vitamin|A nutritious drink for Pokémon.|+10 Speed EVs|10000.0|5000.0|
+Zinc|Vitamin|A nutritious drink for Pokémon.|+10 Special Defense EVs|10000.0|5000.0|
+Rare Candy|Leveling Item|A candy that is packed with energy.|Increases level by 1|0.0|2400.0|
+Health Feather|Feather|A feather that slightly increases HP.|+1 HP EV|300.0|150.0|
+Muscle Feather|Feather|A feather that slightly increases Attack.|+1 Attack EV|300.0|150.0|
+Resist Feather|Feather|A feather that slightly increases Defense.|+1 Defense EV|300.0|150.0|
+Swift Feather|Feather|A feather that slightly increases Speed.|+1 Speed EV|300.0|150.0|
+Fire Stone|Evolution Stone|A stone that radiates heat.|Evolves Pokémon like Vulpix, Growlithe, Eevee (into Flareon), etc.|5000.0|1500.0|
+Water Stone|Evolution Stone|A stone with a blue, watery appearance.|Evolves Pokémon like Poliwhirl, Shellder, Eevee (into Vaporeon), etc.|5000.0|1500.0|
+Thunder Stone|Evolution Stone|A stone that sparkles with electricity.|Evolves Pokémon like Pikachu, Eevee (into Jolteon), Eelektrik, etc.|5000.0|1500.0|
+Leaf Stone|Evolution Stone|A stone with a leaf pattern.|Evolves Pokémon like Gloom, Weepinbell, Exeggcute, etc.|5000.0|1500.0|
+Moon Stone|Evolution Stone|A stone that glows faintly in the moonlight.|Evolves Pokémon like Nidorina, Clefairy, Jigglypuff, etc.|0.0|1500.0|
+Sun Stone|Evolution Stone|A stone that glows like the sun.|Evolves Pokémon like Gloom (into Bellossom), Sunkern, Cottonee, etc.|5000.0|1500.0|
+Shiny Stone|Evolution Stone|A stone that sparkles brightly.|Evolves Pokémon like Togetic, Roselia, Minccino, etc.|5000.0|1500.0|
+Dusk Stone|Evolution Stone|A dark stone that is ominous in appearance.|Evolves Pokémon like Murkrow, Misdreavus, Doublade, etc.|5000.0|1500.0|
+Dawn Stone|Evolution Stone|A stone that sparkles like the morning sky.|Evolves male Kirlia into Gallade, female Snorunt into Froslass.|5000.0|1500.0|
+Ice Stone|Evolution Stone|A stone that is cold to the touch.|Evolves Pokémon like Alolan Vulpix, Galarian Darumaka, Eevee (into Glaceon)|5000.0|1500.0|
+MOVE:
+Tackle|The user charges and slams into the opponent with its body.|TM|Normal|
+Defend|Enters a defensive stance.|TM|Normal|
+Fly|The user flies up and strikes on the next turn.|HM|Flying|
+Surf|Creates a massive wave to damage all nearby opponents.|HM|Water|
+Strength|Exerts great physical power to push obstacles.|HM|Normal|
+Cut|Slices with sharp claws or a blade.|HM|Normal|Grass
+Rock Smash|Breaks through rocks and may lower defense.|HM|Fighting|Rock
+Thunderbolt|Fires a bolt of electricity that may paralyze.|TM|Electric|
+Ice Beam|Shoots a chilling beam that may freeze the foe.|TM|Ice|
+Flamethrower|Breathes a powerful stream of fire.|TM|Fire|
+Shadow Ball|Launches a shadowy blob that may lower Sp. Def.|TM|Ghost|
+Earthquake|A massive tremor damages all Pokémon on the ground.|TM|Ground|
+Psychic|Attacks with mental force that may lower Sp. Def.|TM|Psychic|
+Dragon Pulse|Releases a shock wave of pure dragon power.|TM|Dragon|
+Poison Jab|Strikes with a toxic stinger. May poison.|TM|Poison|Steel
+POKEMON:
+1,Pikachu,Electric,,5,0,2,16,35,55,30,90,,Thunderbolt
+2,Raichu,Electric,,16,1,0,0,60,90,55,110,,Thunderbolt|Strength
+3,Bulblight,Grass,Poison,5,0,4,16,45,49,49,45,,Tackle|Poison Jab
+4,Florashade,Grass,Poison,16,3,5,32,60,62,63,60,,Poison Jab|Cut
+5,Thornroot,Grass,Dark,32,4,0,0,80,82,83,60,,Cut|Shadow Ball
+6,Magflare,Fire,,5,0,7,15,39,52,43,65,,Tackle|Flamethrower
+7,Blazefin,Fire,Flying,15,6,0,0,58,64,58,80,,Flamethrower|Fly
+8,Aquacub,Water,,5,0,9,18,50,48,50,50,,Surf|Tackle
+9,Torrentide,Water,Fighting,18,8,0,0,80,78,80,60,,Surf|Rock Smash
+10,Sandroll,Ground,,4,0,0,0,70,85,70,40,,Earthquake|Strength
+11,Dracoon,Dragon,Flying,10,0,12,30,45,65,55,70,,Dragon Pulse|Fly
+12,Dracurse,Dragon,Ghost,30,11,0,0,80,105,80,95,,Dragon Pulse|Shadow Ball
+13,Glimmerbug,Bug,Electric,5,0,0,0,40,30,50,70,,Thunderbolt|Defend
+14,Pyrowisp,Fire,Ghost,8,0,0,0,38,60,40,75,,Shadow Ball|Flamethrower
+15,Crystix,Ice,Steel,6,0,0,0,55,50,80,30,,Ice Beam|Defend
+16,Steeljaw,Steel,Ground,15,0,0,0,70,95,120,20,,Earthquake|Poison Jab
+17,Windlet,Flying,Normal,4,0,0,0,40,45,35,60,,Fly|Tackle
+18,Toxifin,Poison,Water,12,0,0,0,60,65,60,55,,Surf|Poison Jab
+19,Boulderon,Rock,Fighting,14,0,0,0,90,95,85,35,,Rock Smash|Strength
+20,Lumina,Fairy,Electric,7,0,0,0,55,60,55,85,,Thunderbolt|Defend
+21,Spirithowl,Ghost,Dark,18,0,0,0,60,70,60,80,,Shadow Ball|Tackle
+22,Chillisk,Ice,Dragon,12,0,0,0,65,75,55,50,,Ice Beam|Dragon Pulse
+23,Ignispine,Fire,Steel,13,0,0,0,75,85,80,45,,Flamethrower|Poison Jab
+24,Seraphin,Psychic,Flying,16,0,0,0,70,65,60,90,,Psychic|Fly
+25,Graslash,Grass,Steel,11,0,0,0,60,70,90,40,,Cut|Poison Jab
+26,Venobra,Poison,Dragon,20,0,0,0,68,88,60,95,,Poison Jab|Dragon Pulse
+27,Hydroot,Water,Grass,10,0,0,0,65,70,60,55,,Surf|Cut
+28,Lavaclaw,Fire,Ground,15,0,0,0,80,100,60,45,,Flamethrower|Earthquake
+29,Stormeon,Electric,Flying,20,0,0,0,65,75,60,130,,Thunderbolt|Fly
+30,Nullshade,Normal,Ghost,50,0,0,0,90,85,70,100,,Defend|Shadow Ball

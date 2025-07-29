@@ -103,10 +103,10 @@ public class MoveController {
                     continue;
                 }
 
-                String[] parts = line.split(",", -1);
+                String[] parts = line.split("\\|", -1);
 
-                if (parts.length < 4) {
-                    throw new Exception("Invalid move data: " + line);
+                if (parts.length < 5) {
+                    continue;
                 }
 
                 String name = parts[0].trim();
@@ -125,15 +125,15 @@ public class MoveController {
     }
 
     public void saveToFile(String filename) throws Exception {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
+            writer.write("MOVE:\n");
             for (Move m : moves) {
                 StringBuilder sb = new StringBuilder();
-                writer.write("MOVE:\n");
 
-                sb.append(m.getName()).append(",");
-                sb.append(m.getDescription()).append(",");
-                sb.append(m.getClassification()).append(",");
-                sb.append(m.getType1()).append(",");
+                sb.append(m.getName()).append("|");
+                sb.append(m.getDescription()).append("|");
+                sb.append(m.getClassification()).append("|");
+                sb.append(m.getType1()).append("|");
                 sb.append(m.getType2() != null ? m.getType2() : "");
 
                 writer.write(sb.toString());

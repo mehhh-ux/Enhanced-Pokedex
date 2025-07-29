@@ -29,6 +29,11 @@ public class PokemonController {
     private MoveController mController;
     private ItemController iController;
 
+    public PokemonController(MoveController mController, ItemController iController) {
+        this.mController = mController;
+        this.iController = iController;
+    }
+
     /**
      * Adds a pokemon into the pokemons ArrayList.
      *
@@ -163,10 +168,10 @@ public class PokemonController {
     }
 
     public void saveToFile(String filename) throws Exception {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
+            writer.write("POKEMON:\n");
             for (Pokemon p : pokemons) {
                 StringBuilder sb = new StringBuilder();
-                writer.write("POKEMON:\n");
 
                 sb.append(p.getPokedexNum()).append(",");
                 sb.append(p.getName()).append(",");
