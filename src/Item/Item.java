@@ -6,6 +6,12 @@ package Item;
 
 import java.util.ArrayList;
 
+/**
+ * Represents a general Item in the Pokémon system with basic properties such as name,
+ * category, description, effect, and pricing.
+ * This class serves as the superclass for more specific item types like
+ * Vitamins, Feathers, LevelingItems, and EvolutionStones.
+ */
 public class Item {
     /**
      * Item Attributes
@@ -30,6 +36,15 @@ public class Item {
         this.effect = effect;
         this.buyingPrice = buyingPrice;
         this.sellingPrice = sellingPrice;
+    }
+
+    /**
+     * Creates a copy of this item.
+     *
+     * @return a new Item with the same properties
+     */
+    public Item clone() {
+        return new Item(this.getName(), this.getCategory(), this.description, this.getEffect(), this.getBuyingPrice(), this.getSellingPrice());
     }
 
     /**

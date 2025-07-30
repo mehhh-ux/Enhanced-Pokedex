@@ -9,6 +9,11 @@ import Move.Move;
 import Item.Item;
 import java.util.ArrayList;
 
+/**
+ * Pokemon.java is the blueprint for individual Pokemon objects.
+ * It holds the properties and behaviors of a Pokemon.
+ */
+
 public class Pokemon {
     /**
      * Pokemon Attributes
@@ -25,8 +30,7 @@ public class Pokemon {
      * @return an ArrayList of moves.
      */
     private ArrayList<Move> getDefaultMoves() {
-        ArrayList<Move> moves = new ArrayList<>();
-        Move.initializeMoveList();
+        ArrayList<Move> moves = Move.initializeMoveList();
         return moves;
     }
 
@@ -69,7 +73,6 @@ public class Pokemon {
     public Pokemon(int pokedexNum, String name, String type1, String type2, int baseLvl,
                    int evolvesFrom, int evolveTo, int evolutionLvl, Stats baseStats) {
         this(pokedexNum, name, type1, baseLvl, evolvesFrom, evolveTo, evolutionLvl, baseStats);
-        this.moveSet = getDefaultMoves();
         this.type2 = type2;
     }
 
@@ -161,17 +164,26 @@ public class Pokemon {
         return heldItem;
     }
 
+    /**
+    * Setter
+    * @set what item the pokemon helds
+    */
+
     public void setHeldItem(Item item) {
         this.heldItem = item;
     }
 
     /**
-     * Prints a message that says that the pokemon cried.
+     * Prints the cry of a specific pokemon
      */
     public void cry() {
         System.out.println(name + " cries!");
     }
 
+    /**
+     * Allows the user to have a clone or copy of a pokemon object. It prevents the modification of just one address
+     * @return a copy/clone of a pokemon object
+     */
     public Pokemon copy() {
         Pokemon copy;
         Stats copiedStats = new Stats(this.baseStats.getHp(), this.baseStats.getAtk(), this.baseStats.getDef(), this.baseStats.getSpd());

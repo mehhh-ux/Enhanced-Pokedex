@@ -17,8 +17,18 @@ public class FileIO {
         this.iController = iController;
     }
 
-    public void loadSaveFile(JFrame parent) {
-        String sFileName = "data.txt";
+    /**
+     * Loads saved data from the specified text file and initializes game state.
+     * Delegates the parsing of each section (ITEM, MOVE, POKEMON, TRAINER)
+     * to their respective controllers.
+     * @param parent   the parent frame for dialog display
+     * @param filename the name of the save file to load
+     */
+    public void loadSaveFile(JFrame parent, String filename) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))){
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
 
         try {
             iController.loadFromFile(sFileName);
@@ -31,9 +41,12 @@ public class FileIO {
         }
     }
 
-    public void saveToFile() {
-        String filename = "data.txt";
-
+    /**
+     * Saves the current game state to the specified file by delegating to the
+     * respective controller's {@code saveToFile} method.
+     * @param filename the name of the file to save the game state to
+     */
+    public void saveToFile(String filename) {
         try {
             iController.saveToFile(filename);
             mController.saveToFile(filename);

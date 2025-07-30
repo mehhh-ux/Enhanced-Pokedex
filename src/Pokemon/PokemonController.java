@@ -17,6 +17,12 @@ import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
+/**
+ * PokemonController.java is responsible for managing Pokémon-related operations,
+ * including adding, retrieving, searching, loading from file, saving to file, and
+ * applying items to Pokémon. It maintains a master list of Pokémon in the system.
+ */
+
 public class PokemonController {
     /**
      * A list of pokemons.
@@ -29,6 +35,12 @@ public class PokemonController {
     private MoveController mController;
     private ItemController iController;
 
+    /**
+     * Constructs a PokemonController with the given MoveController and ItemController.
+     *
+     * @param mController the controller managing move data
+     * @param iController the controller managing item data
+     */
     public PokemonController(MoveController mController, ItemController iController) {
         this.mController = mController;
         this.iController = iController;
@@ -73,6 +85,12 @@ public class PokemonController {
         return results;
     }
 
+    /**
+     * Checks if a Pokémon number already exists.
+     *
+     * @param pokedexNum the Pokedex number to check
+     * @return true if duplicate
+     */
     public boolean pokemonNumIsDup(int pokedexNum) {
         for (Pokemon p : pokemons) {
             if (p.getPokedexNum() == pokedexNum) {
@@ -83,6 +101,12 @@ public class PokemonController {
         return false;
     }
 
+    /**
+     * Checks if a Pokémon name already exists.
+     *
+     * @param name the name to check
+     * @return true if duplicate
+     */
     public boolean pokemonNameIsDup(String name) {
         for (Pokemon p : pokemons) {
             if (p.getName().equalsIgnoreCase(name)) {
@@ -93,7 +117,29 @@ public class PokemonController {
         return false;
     }
 
-    public void loadFromFile(String filename) throws Exception {
+    /**
+     * Gets a Pokémon by name.
+     *
+     * @param name the name of the Pokémon
+     * @return the Pokémon object, or null if not found
+     */
+    public Pokemon getPokemonByName(String name) {
+        for (Pokemon p : pokemons) {
+            if (p.getName().equalsIgnoreCase(name)) {
+                return p;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Loads Pokémon data from a file using a buffered reader.
+     *
+     * @param reader the reader used to read the file
+     * @throws Exception if file format is invalid or an I/O error occurs
+     */
+    public void loadFromFile(BufferedReader reader) throws Exception {
         pokemons.clear();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
@@ -167,6 +213,12 @@ public class PokemonController {
         }
     }
 
+    /**
+     * Saves Pokémon data to a file.
+     *
+     * @param filename the output file path
+     * @throws Exception if writing fails
+     */
     public void saveToFile(String filename) throws Exception {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
             writer.write("POKEMON:\n");
@@ -207,34 +259,3 @@ public class PokemonController {
         }
     }
 }
-//    /**
-//     * pokemonNumIsDup() checks through the ArrayList pokemons if there are any
-//     pokemon objects with the same pokedexNum.
-//     * @param pokedexNum is the number to check
-//    (this comes from the user back in PokemonMenu.java).
-//     * @return a boolean value.
-//     */
-//    public boolean pokemonNumIsDup(int pokedexNum){
-//        for (Pokemon p: pokemons){
-//            if (p.getPokedexNum() == pokedexNum){
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-
-//    /**
-//     * pokemonNameIsDup() checks through the ArrayList pokemons if there are any
-//     pokemon objects with the same pokedexName.
-//     * @param pokedexName is the name (String) to check
-//    (this comes from the user back in PokemonMenu.java).
-//     * @return a boolean value.
-//     */
-//    public boolean pokemonNameIsDup(String pokedexName){
-//        for (Pokemon p: pokemons){
-//            if (p.getName().equalsIgnoreCase(pokedexName)){
-//                return true;
-//            }
-//        }
-//        return false;
-//    }

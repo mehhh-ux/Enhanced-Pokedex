@@ -8,7 +8,6 @@ package Move;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
@@ -60,9 +59,15 @@ public class MoveController {
         return results;
     }
 
+    /**
+     * Checks if a Move name already exists.
+     *
+     * @param name the name to check
+     * @return true if duplicate, otherwise return false
+     */
     public boolean moveNameIsDup(String name) {
         for (Move m : moves) {
-            if (m.getName() == name) {
+            if (m.getName().equalsIgnoreCase(name)) {
                 return true;
             }
         }
@@ -70,6 +75,12 @@ public class MoveController {
         return false;
     }
 
+    /**
+     * Gets a Move by name.
+     *
+     * @param name the name of the Move
+     * @return the MOve object, or null if not found
+     */
     public Move getMoveByName(String name) {
         for (Move m : moves) {
             if (m.getName().equalsIgnoreCase(name)) {
@@ -80,7 +91,13 @@ public class MoveController {
         return null;
     }
 
-    public void loadFromFile(String filename) throws Exception {
+    /**
+     * Loads Move data from a file using a buffered reader.
+     *
+     * @param reader the reader used to read the file
+     * @throws Exception if file format is invalid or an I/O error occurs
+     */
+    public void loadFromFile(BufferedReader reader) throws Exception {
         moves.clear();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
@@ -124,6 +141,13 @@ public class MoveController {
         }
     }
 
+
+    /**
+     * Saves Pokémon data to a file.
+     *
+     * @param filename the output file path
+     * @throws Exception if writing fails
+     */
     public void saveToFile(String filename) throws Exception {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
             writer.write("MOVE:\n");

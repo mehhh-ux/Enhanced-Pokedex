@@ -1,6 +1,8 @@
 package Pokemon;
 
-import Item.ItemController;
+import Main.MainGUI;
+import Main.TextAreaRenderer;
+import Move.Move;
 import Move.MoveController;
 
 import javax.swing.*;
@@ -8,10 +10,15 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * PokemonView is the GUI component responsible for managing the display and interaction
+ * with Pokémon data in the application.
+ */
 public class PokemonView extends JFrame {
     private PokemonController pokemonController;
     private MoveController moveController;
     private ItemController itemController;
+    private TrainerController trainerController;
 
     private JTable table;
     private DefaultTableModel tableModel;
@@ -20,10 +27,14 @@ public class PokemonView extends JFrame {
     private JTextField tfEvolvesFrom, tfEvolvesTo, tfEvolutionLvl;
     private JTextField tfHP, tfATK, tfDEF, tfSPD;
 
-    public PokemonView(PokemonController controller, MoveController moveController, ItemController itemController) {
-        this.pokemonController = controller;
+    /**
+     * Constructs the GUI view for Pokémon, including tabbed panels for input and listing.
+     */
+    public PokemonView(PokemonController pokemonController, MoveController moveController, ItemController itemController, TrainerController trainerController) {
+        this.pokemonController = pokemonController;
         this.moveController = moveController;
         this.itemController = itemController;
+        this.trainerController = trainerController;
 
         setTitle("Pokemon Menu");
         setResizable(false);
@@ -51,6 +62,11 @@ public class PokemonView extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Creates and returns the JPanel for adding a new Pokémon.
+     *
+     * @return a JPanel with input fields and buttons to add a Pokémon
+     */
     private JPanel createAddPokemonPanel() {
         JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -102,6 +118,11 @@ public class PokemonView extends JFrame {
         return panel;
     }
 
+    /**
+     * Returns the button that triggers the addition of a Pokémon based on form input.
+     *
+     * @return the "Add Pokemon" JButton with action logic
+     */
     private JButton getAddPokemonButton() {
         JButton btnAdd = new JButton("Add Pokemon");
         btnAdd.addActionListener((e) -> {
@@ -146,17 +167,29 @@ public class PokemonView extends JFrame {
         return btnAdd;
     }
 
+    /**
+     * Returns the button used to navigate back to the main menu.
+     *
+     * @return the "Return" JButton
+     */
     private JButton getReturnButton(){
         JButton exitBtn = new JButton("Return to Pokedex Main Menu");
         exitBtn.addActionListener(e -> {
             dispose();
-            new Main.MainGUI(this.pokemonController, this.moveController, this.itemController);
+            new MainGUI(this.pokemonController, this.moveController, this.itemController, this.trainerController);
         });
 
         return exitBtn;
     }
 
-    private Object[][] getPokemonTableData(ArrayList<Pokemon> pokemons){
+    /**
+     * Converts a list of Pokemon into a 2D array for use in a JTable, specifically for showing all the data
+     * regarding pokemon(basic info).
+     *
+     * @param pokemons the list of Pokemon
+     * @return a 2D Object array representing table rows and columns
+     */
+    private Object[][] showPokemonTableData(ArrayList<Pokemon> pokemons){
         Object[][] data = new Object[pokemons.size()][12];
 
         for (int i = 0; i < pokemons.size(); i++) {
@@ -174,16 +207,68 @@ public class PokemonView extends JFrame {
             data[i][10] = p.getBaseStats().getDef();
             data[i][11] = p.getBaseStats().getSpd();
         }
+
         return data;
     }
 
-    private JScrollPane getJScrollPane(ArrayList<Pokemon> pokemons) {
+    /**
+     * Converts a list of Pokemon into a 2D array for use in a JTable, specifically for showing a specific data
+     * , the one that the user searched for(basic info).
+     *
+     * @param pokemons the list of Pokemon
+     * @return a 2D Object array representing table rows and columns including moves
+     */
+    private Object[][] searchPokemonTableData(ArrayList<Pokemon> pokemons){
+        Object[][] data = new Object[pokemons.size()][13];
+        ArrayList<Move> moveSet = null;
+        StringBuilder string = new StringBuilder();
+
+
+        for (int i = 0; i < pokemons.size(); i++) {
+            Pokemon p = pokemons.get(i);
+            data[i][0] = String.format("%04d", p.getPokedexNum());
+            data[i][1] = p.getName();
+            data[i][2] = p.getType1();
+            data[i][3] = (p.getType2() != null) ? p.getType2() : "---";
+            data[i][4] = p.getBaseLvl();
+            data[i][5] = (p.getEvolvesFrom() != 0) ? String.format("%04d", p.getEvolvesFrom()) : "---";
+            data[i][6] = (p.getEvolvesTo() != 0) ? String.format("%04d", p.getEvolvesTo()) : "---";
+            data[i][7] = (p.getEvolutionLvl() != 0) ? p.getEvolutionLvl() : "-";
+            data[i][8] = p.getBaseStats().getHp();
+            data[i][9] = p.getBaseStats().getAtk();
+            data[i][10] = p.getBaseStats().getDef();
+            data[i][11] = p.getBaseStats().getSpd();
+            data[i][12] = p.getMoveSet();
+
+            moveSet = p.getMoveSet();
+            if (moveSet != null && !moveSet.isEmpty()) {
+                for (int j = 0; j < moveSet.size(); j++) {
+                    string.append(moveSet.get(j).getName());
+                    if (j < moveSet.size() - 1) {
+                        string.append(", ");
+                    }
+                }
+                data[i][12] = string.toString();
+            } else {
+                data[i][12] = "";
+            }
+        }
+        return data;
+    }
+
+    /**
+     * Returns a scrollable JTable with all Pokémon displayed in tabular format.
+     *
+     * @param pokemons the list of Pokémon to display
+     * @return a JScrollPane containing the JTable
+     */
+    private JScrollPane showScrollPane(ArrayList<Pokemon> pokemons) {
         String[] columnNames = {
                 "Pokedex Number", "Name", "Type 1", "Type 2", "Base Level", "Evolves From",
                 "Evolves To", "Evolution Level", "HP", "ATK", "DEF", "SPD"
         };
 
-        Object[][] data = getPokemonTableData(pokemons);
+        Object[][] data = showPokemonTableData(pokemons);
 
         tableModel = new DefaultTableModel(data, columnNames){
             @Override
@@ -196,12 +281,45 @@ public class PokemonView extends JFrame {
         table.setFillsViewportHeight(true);
         table.getTableHeader().setReorderingAllowed(false);
 
+        return new JScrollPane(table);
+    }
+
+    /**
+     * Returns a scrollable JTable with searched Pokemon results.
+     *
+     * @param pokemons the list of matched Pokemons
+     * @return a JScrollPane containing the JTable with move column
+     */
+    public JScrollPane searchScrollPane(ArrayList<Pokemon> pokemons) {
+        String[] columnNames = {
+                "Pokedex Number", "Name", "Type 1", "Type 2", "Base Level", "Evolves From",
+                "Evolves To", "Evolution Level", "HP", "ATK", "DEF", "SPD", "Move"
+        };
+
+        Object[][] data = searchPokemonTableData(pokemons);
+
+        tableModel = new DefaultTableModel(data, columnNames){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
+        table = new JTable(tableModel);
+        table.setAutoCreateRowSorter(true);
+        table.setFillsViewportHeight(true);
+        table.getTableHeader().setReorderingAllowed(false);
+
+        table.getColumnModel().getColumn(12).setCellRenderer(new TextAreaRenderer());
+
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(800,300));
 
         return scrollPane;
     }
 
+    /**
+     * Clears all text fields in the add Pokémon form.
+     */
     private void clearFields(){
         tfPokedexNum.setText("");
         tfName.setText("");
@@ -217,9 +335,12 @@ public class PokemonView extends JFrame {
         tfSPD.setText("");
     }
 
+    /**
+     * Refreshes the data in the "Show All Pokemon" table with the latest list.
+     */
     private void refreshTableData(){
         if (tableModel != null){
-            Object[][] newData = getPokemonTableData(pokemonController.getAllPokemon());
+            Object[][] newData = showPokemonTableData(pokemonController.getAllPokemon());
             tableModel.setRowCount(0);
             for (Object[] row: newData) {
                 tableModel.addRow(row);
@@ -227,7 +348,12 @@ public class PokemonView extends JFrame {
         }
     }
 
-    private JButton getJButton() {
+    /**
+     * Returns the search button that prompts for input and shows matched Pokémon.
+     *
+     * @return the "Search Pokemon" JButton with logic
+     */
+    private JButton searchButton() {
         JButton searchBtn = new JButton("Search Pokemon");
         searchBtn.addActionListener(e -> {
             String key = JOptionPane.showInputDialog(this, "Enter a search keyword (ID, name, or type):");
@@ -240,7 +366,7 @@ public class PokemonView extends JFrame {
             if (results.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No pokemon containing the word '" + key.trim() + "' in the Pokedex.", "Search Failed", JOptionPane.ERROR_MESSAGE);
             } else {
-                JScrollPane resultScroll = getJScrollPane(results);
+                JScrollPane resultScroll = searchScrollPane(results);
                 JOptionPane.showMessageDialog(this, resultScroll, "Search Results for '" + key.trim() + "'", JOptionPane.INFORMATION_MESSAGE);
             }
 
@@ -249,14 +375,20 @@ public class PokemonView extends JFrame {
         return searchBtn;
     }
 
+    /**
+     * Creates and returns the panel displaying all Pokémon and associated buttons.
+     *
+     * @return the JPanel containing the table and search/return buttons, everything that enables the pokemon menu
+     * to run.
+     */
     private JPanel createShowAllPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         JPanel buttonPanel = new JPanel();
 
-        JScrollPane scrollPane = getJScrollPane(pokemonController.getAllPokemon());
+        JScrollPane scrollPane = showScrollPane(pokemonController.getAllPokemon());
         panel.add(scrollPane, BorderLayout.CENTER);
 
-        JButton searchBtn = getJButton();
+        JButton searchBtn = searchButton();
 
         buttonPanel.add(searchBtn);
 

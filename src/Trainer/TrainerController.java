@@ -1,14 +1,51 @@
 package Trainer;
 
 import Item.Item;
+import Item.ItemController;
 import Move.Move;
 import Pokemon.Pokemon;
+import Pokemon.PokemonController;
 
+import java.io.BufferedWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class TrainerController {
-    private ArrayList<Trainer> trainers;
-    private ArrayList<Trainer> results;
+    private ArrayList<Trainer> trainers = new ArrayList<>();
+    private ArrayList<Trainer> results = new ArrayList<>();
+    private PokemonController pokemonController;
+    private MoveController moveController;
+    private ItemController itemController;
+
+    public TrainerController(PokemonController pokemonController, MoveController moveController, ItemController itemController) {
+        this.pokemonController = pokemonController;
+        this.moveController = moveController;
+        this.itemController = itemController;
+    }
+
+    public boolean trainerIdIsDup(int trainerId) {
+        for (Trainer t : trainers) {
+            if (t.getTrainerId() == trainerId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean trainerNameIsDup(String name) {
+        for (Trainer t : trainers) {
+            if (t.getName().equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public boolean addTrainer(Trainer t) {
         return trainers.add(t);
@@ -18,8 +55,19 @@ public class TrainerController {
         return trainers;
     }
 
+    public Trainer getTrainerById(int trainerId) {
+        for (Trainer t : trainers) {
+            if (t.getTrainerId() == trainerId) {
+                return t;
+            }
+        }
+
+        return null;
+    }
+
     public ArrayList<Trainer> searchTrainer(String key){
         key = key.toLowerCase();
+        results.clear();
         for (Trainer t : trainers) {
             if (String.valueOf(t.getTrainerId()).contains(key) ||
                     t.getName().toLowerCase().contains(key) ||
@@ -34,22 +82,27 @@ public class TrainerController {
         return results;
     }
 
-    public boolean buyItem(Trainer t, Item i, double price){
+    public boolean buyItem(Trainer t, Item i, double price, int quantity){
         ArrayList<Item> bag = t.getItems();
-        int totalItems;
-        long uniqueItems;
-        boolean alreadyHasUniqueItem;
+        int totalItems = 0;
+        long uniqueItems = 0, countSameItem = 0;
+        boolean alreadyHasUniqueItem = false;
+        double totalCost = 0.0;
 
         totalItems = bag.size();
         uniqueItems = bag.stream().map(item -> item.getName()).distinct().count();
-        alreadyHasUniqueItem = bag.stream().anyMatch(existing -> existing.getName().equalsIgnoreCase(i.getName()));
+        countSameItem = bag.stream().filter(existing -> existing.getName().equalsIgnoreCase(i.getName())).count();
+        alreadyHasUniqueItem = countSameItem > 0;
 
-        if (t.getMoney() < price){
-            System.out.println("Insufficient money, can't buy '" + i.getName() + "'.");
+        totalCost = price * quantity;
+
+        if (t.getMoney() < totalCost) {
+            System.out.println("Insufficient money. You need ₱" + totalCost + " to buy " + quantity + " of '" + i.getName() + "'.");
             return false;
         }
-        if (totalItems >= 50){
-            System.out.println("Bag is full (50 items). Please discard items before buying new ones.");
+
+        if (totalItems + quantity > 500){
+            System.out.println("Bag is full (500 items). Please discard items before buying new ones.");
             return false;
         }
         if (!alreadyHasUniqueItem && uniqueItems >= 10){
@@ -57,21 +110,43 @@ public class TrainerController {
             return false;
         }
 
-        t.setMoney(t.getMoney() - price);
-        bag.add(i);
+        if (countSameItem + quantity > 50) {
+            System.out.println("Cannot have more than 50 copies of '" + i.getName() + "'. Currently have: " + countSameItem);
+            return false;
+        }
+
+        t.setMoney(t.getMoney() - totalCost);
+        for (int j = 0; j < quantity; j++){
+            bag.add(i.clone());
+        }
         return true;
     }
 
-    public boolean sellItem(Trainer t, Item i){
-        for (Item item: t.getItems()){
-            if (item.getName().equalsIgnoreCase(i.getName())){
-                t.getItems().remove(item);
-                t.setMoney(t.getMoney() + i.getSellingPrice());
-                return true;
+    public boolean sellItem(Trainer t, Item i, int quantity) {
+        ArrayList<Item> bag = t.getItems();
+        int removed = 0;
+        long ownedCount;
+        double totalGain = 0.0;
+
+        ownedCount = bag.stream().filter(item -> item.getName().equalsIgnoreCase(i.getName())).count();
+
+        if (ownedCount < quantity) {
+            System.out.println(t.getName() + " does not have " + quantity + " copies of " + i.getName() + ".");
+            return false;
+        }
+
+        for (int j = 0; j < bag.size() && removed < quantity; j++) {
+            Item item = bag.get(j);
+            if (item.getName().equalsIgnoreCase(i.getName())) {
+                bag.remove(j);
+                j--;
+                removed++;
             }
         }
-        System.out.println(t.getName() + " currently does not have " + i.getName() + ".");
-        return false;
+
+        totalGain = i.getSellingPrice() * quantity;
+        t.setMoney(t.getMoney() + totalGain);
+        return true;
     }
 
     public boolean addPokemonToLineup(Trainer t, Pokemon p){
@@ -96,7 +171,7 @@ public class TrainerController {
         }
     }
 
-    public boolean switchPokemonFromStorage(Trainer t, Pokemon pLineup, Pokemon pStorage){
+    public boolean switchPokemonFromStorge(Trainer t, Pokemon pLineup, Pokemon pStorage){
         boolean existsInTheStorage;
         boolean existsInTheLineup;
         Pokemon toRemoveFromLineup = null;
@@ -213,7 +288,7 @@ public class TrainerController {
             System.out.println(p.getName() + " already learned a maximum of 4 moves. Remove a move first.");
             return false;
         }
-        if (!(actual.getType1().equalsIgnoreCase(m.getClassification()) || (actual.getType2() != null && actual.getType2().equalsIgnoreCase(m.getClassification())))){
+        if ((actual.getType1().equalsIgnoreCase(m.getClassification()) || (actual.getType2() != null && actual.getType2().equalsIgnoreCase(m.getClassification())))){
             System.out.println("Error: " + m.getName() + " is incomaptible with " + actual.getName() + ".");
             return false;
         }

@@ -1,6 +1,3 @@
-/**
- * MoveView.java is responsible for all outputs in the move menu.
- */
 package Move;
 
 import Item.ItemController;
@@ -13,10 +10,15 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
+/**
+ * MoveView is the GUI component responsible for managing the display and interaction
+ * with Move data in the application.
+ */
 public class MoveView extends JFrame {
     private MoveController mController;
     private ItemController iController;
     private PokemonController pController;
+    private TrainerController trainerController;
 
     private JTabbedPane tabbedPane;
 
@@ -25,12 +27,18 @@ public class MoveView extends JFrame {
 
     private JButton addBtn, searchBtn, exitBtn;
 
-    private JTextField tfName, tfDesc, tfClass, tfType1, tfType2;
+    private JTextField tfName, tfDesc, tfType1, tfType2;
 
-    public MoveView(PokemonController pController, MoveController mController, ItemController iController) {
-        this.mController = mController;
-        this.pController = pController;
-        this.iController = iController;
+    private JComboBox<String> classComboBox;
+
+    /**
+     * Constructs the GUI view for Move, including tabbed panels for input and listing.
+     */
+    public MoveView(PokemonController pokemonController, MoveController moveController, ItemController itemController, TrainerController trainerController) {
+        this.mController = moveController;
+        this.pController = pokemonController;
+        this.iController = itemController;
+        this.trainerController = trainerController;
 
         setTitle("Move Menu");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -46,23 +54,31 @@ public class MoveView extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Creates and returns the JPanel for adding a new Move.
+     *
+     * @return a JPanel with input fields and buttons to add a Move
+     */
     private JPanel createAddMovePanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(0, 2, 5, 5));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        panel.setPreferredSize(new Dimension(300, 200));
 
         tfName = new JTextField();
         tfDesc = new JTextField();
-        tfClass = new JTextField();
         tfType1 = new JTextField();
         tfType2 = new JTextField();
+
+        String[] classifications = { "— Select —", "HM", "TM"};
+        classComboBox = new JComboBox<>(classifications);
 
         panel.add(new JLabel("Name:"));
         panel.add(tfName);
         panel.add(new JLabel("Description:"));
         panel.add(tfDesc);
         panel.add(new JLabel("Classification (HM/TM):"));
-        panel.add(tfClass);
+        panel.add(classComboBox);
         panel.add(new JLabel("Type 1:"));
         panel.add(tfType1);
         panel.add(new JLabel("Type 2 (optional):"));
@@ -77,6 +93,11 @@ public class MoveView extends JFrame {
         return panel;
     }
 
+    /**
+     * Returns the button that triggers the addition of a Move based on form input.
+     *
+     * @return the "Add Move" JButton with action logic
+     */
     private JButton getAddMoveButton() {
         JButton btnAdd = new JButton("Add Move");
         btnAdd.addActionListener((e) -> {
@@ -89,16 +110,27 @@ public class MoveView extends JFrame {
         return btnAdd;
     }
 
+    /**
+     * Returns the button used to navigate back to the main menu.
+     *
+     * @return the "Exit" JButton
+     */
     private JButton getExitButton() {
         JButton exitBtn = new JButton("Exit");
         exitBtn.addActionListener(e -> {
             dispose();
-            new Main.MainGUI(this.pController, this.mController, this.iController);
+            new Main.MainGUI(this.pController, this.mController, this.iController, this.trainerController);
         });
 
         return exitBtn;
     }
 
+    /**
+     * Creates and returns the panel displaying all Move and associated buttons.
+     *
+     * @return the JPanel containing the table and search/return buttons, everything that enables the move menu
+     * to run.
+     */
     private JPanel createShowAllPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         JPanel buttonPnl = new JPanel();
@@ -117,6 +149,11 @@ public class MoveView extends JFrame {
         return panel;
     }
 
+    /**
+     * Returns the search button that prompts for input and shows matched Move.
+     *
+     * @return the "Search Move" JButton with logic
+     */
     private JButton createSearchMoveButton() {
         JButton searchBtn = new JButton("Search Move");
         searchBtn.addActionListener(e -> {
@@ -125,6 +162,12 @@ public class MoveView extends JFrame {
         return searchBtn;
     }
 
+    /**
+     * Returns a scrollable JTable with searched MOve results.
+     *
+     * @param moves the list of matched Moves
+     * @return a JScrollPane containing the JTable
+     */
     private JScrollPane getJScrollPane(ArrayList<Move> moves) {
         String[] columns = { "Name", "Description", "Classification", "Type 1", "Type 2" };
 
@@ -148,10 +191,15 @@ public class MoveView extends JFrame {
         return scrollPane;
     }
 
+    /**
+     * Handles the logic of adding a move to the database.
+     *
+     * prints a successful message if addition of move is successful
+     */
     private void handleAddMove() {
         String name = tfName.getText().trim();
         String description = tfDesc.getText().trim();
-        String classification = tfClass.getText().trim();
+        String classification = (String) classComboBox.getSelectedItem();
         String type1 = tfType1.getText().trim();
         String type2 = tfType2.getText().trim();
 
@@ -160,7 +208,7 @@ public class MoveView extends JFrame {
             return;
         }
 
-        if (name.isEmpty() || description.isEmpty() || classification.isEmpty() || type1.isEmpty()) {
+        if (name.isEmpty() || description.isEmpty() || classification.equals("— Select —") || type1.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please fill in all required fields.", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -172,6 +220,11 @@ public class MoveView extends JFrame {
         showAllMoves();
     }
 
+    /**
+     * Handles the logic of searching a move from the database.
+     *
+     * prints a the result for searching for a move/s
+     */
     private void handleSearchMove() {
         String key = JOptionPane.showInputDialog(this, "Enter a search keyword:", "Search Move", JOptionPane.QUESTION_MESSAGE);
         if (key == null || key.trim().isEmpty()) {
@@ -190,13 +243,20 @@ public class MoveView extends JFrame {
         results.clear();
     }
 
+    /**
+     * Converts a list of Move into a 2D array for use in a JTable, specifically for showing a specific data
+     * , the one that the user searched for (basic info).
+     *
+     * @param moves the list of Move
+     * @return a 2D Object array representing table rows and columns
+     */
     private Object[][] getMoveTableData(ArrayList<Move> moves) {
         Object[][] data = new Object[moves.size()][5];
 
         for (int i = 0; i < moves.size(); i++) {
             Move m = moves.get(i);
             data[i][0] = m.getName();
-            data[i][1] = reduceDescription(60, m.getDescription());
+            data[i][1] = m.getDescription();
             data[i][2] = m.getClassification();
             data[i][3] = m.getType1();
             data[i][4] = m.getType2() != null ? m.getType2() : "------";
@@ -205,17 +265,23 @@ public class MoveView extends JFrame {
         return data;
     }
 
+    /**
+     * Responsible for retrieving the Move object/s
+     */
     private void showAllMoves() {
         ArrayList<Move> moves = mController.getAllMoves();
-        displayMoves(moves, null);
+        displayMoves(moves);
     }
 
-    private void displayMoves(ArrayList<Move> moves, String key) {
+    /**
+     * Display all the move objects and their corresponding information.
+     */
+    private void displayMoves(ArrayList<Move> moves) {
         tableModel.setRowCount(0);
         for (Move m : moves) {
             tableModel.addRow(new Object[] {
                     m.getName(),
-                    reduceDescription(60, m.getDescription()),
+                    m.getDescription(),
                     m.getClassification(),
                     m.getType1(),
                     m.getType2() != null ? m.getType2() : "------"
@@ -223,137 +289,13 @@ public class MoveView extends JFrame {
         }
     }
 
+    /**
+     * Clears all text fields in the add Move form.
+     */
     private void clearFields() {
         tfName.setText("");
         tfDesc.setText("");
-        tfClass.setText("");
         tfType1.setText("");
         tfType2.setText("");
     }
-
-    /**
-     //     * Shorten move descriptions if too long.
-     //     * @param maxLength is the cut off.
-     //     * @return the formatted description (shortened/reduced)
-     //     */
-    public String reduceDescription(int maxLength, String description) {
-        if (description.length() > maxLength) {
-            return description.substring(0, maxLength - 3) + "...";
-        } else {
-            return description;
-        }
-    }
-
-//    /**
-//     * Variable initialization for input scanning.
-//     */
-//    private Scanner scanner = new Scanner(System.in);
-//    private String name, description, classification, type1, type2;
-//
-//    /**
-//     * promptMoveData() asks the user information about the move they want to add.
-//     * Once all information is gathered, this method then creates a new move object based
-//     off of the user's input.
-//     * @return the newly created move object.
-//     */
-//    public Move promptMoveData(){
-//        System.out.println("\nYou are in the process of adding a move!");
-//        System.out.println("-------------------------------------------");
-//        System.out.print("Name: ");
-//        name = scanner.nextLine();
-//        System.out.print("Description: ");
-//        description = scanner.nextLine();
-//        System.out.print("Classification (HM/TM): ");
-//        classification = scanner.nextLine();
-//        System.out.print("Type 1: ");
-//        type1 = scanner.nextLine();
-//        System.out.print("Type 2 (Press Enter to skip): ");
-//        type2 = scanner.nextLine();
-//        type2 = type2.isEmpty() ? null : type2;
-//
-//        return (type2 == null)
-//                ? new Move(name, description, classification, type1)
-//                : new Move(name, description, classification, type1, type2);
-//    }
-//
-//    /**
-//     * Header for displaying moves and their attributes.
-//     */
-//    @Override
-//    public void printHeader() {
-//        System.out.printf("\n%-30s%-10s%-15s%-15s%-60s\n", "Name", "Class", "Type 1",
-//                "Type 2", "Description");
-//        System.out.println("---------------------------------------------------------------------------------------------------------------------------------");
-//    }
-//
-//    /**
-//     * Displays all attributes of the move.
-//     * @param move is a class of Move which contains the move itself
-//     */
-//    @Override
-//    public void displayAttributes(Move move) {
-//        System.out.printf("%-30s%-10s%-15s%-15s%-70s\n",
-//                move.getName(), move.getClassification() != null ? move.getClassification() : "-----",
-//                move.getType1(), move.getType2() != null ? move.getType2() : "------", reduceDescription(60, move.getDescription()));
-//    }
-//
-//    /**
-//     * successfulPokemonAddMessage() prints a message if the addition of move is successful
-//     * @param name is a String depending on the move name.
-//     */
-//    public void successfulMoveAddMessage(String name){
-//        System.out.println("Successfully added " + name + "!");
-//    }
-//
-//    /**
-//     * Prints and displays the attributes of every move objects in an ArrayList.
-//     * @param moves is a list of move objects.
-//     * @param key is a string that is searched by the user (this is used with the search method)
-//     */
-//    @Override
-//    public void printAll(ArrayList<Move> moves, String key) {
-//        if (moves.isEmpty() && !key.isEmpty()) {
-//            System.out.println("No move containing the word '" + key + "' in the Pokedex.");
-//            return;
-//        }else if (moves.isEmpty()) {
-//            System.out.println("No move to show in the pokedex");
-//            return;
-//        }
-//
-//        printHeader();
-//        for (Move m : moves){
-//            displayAttributes(m);
-//        }
-//    }
-//
-//    /**
-//     * Asks the user to enter their desired keyword for filter.
-//     * @return user's input.
-//     */
-//    @Override
-//    public String promptForSearchKey() {
-//        System.out.println("\nYou are in the process of searching a move!");
-//        System.out.println("--------------------------------------------");
-//        System.out.print("Enter a search keyword: ");
-//        return scanner.nextLine();
-//    }
-//
-//    /**
-//     * Asks the user to press enter to continue.
-//     */
-//    @Override
-//    public void pressAnyKeyPrompt(){
-//        System.out.print("Displayed all move/s available in the Pokedex.\nPress Enter to continue...");
-//        scanner.nextLine();
-//    }
-//
-//    /**
-//     * Asks the user to press enter to continue after searching for a move.
-//     * @param key is a string that is searched by the user
-//     */
-//    @Override
-//    public void pressAnyKeyPromptForSearch(String key){
-//        System.out.print("Displayed all move/s containing the word/number '" + key + "' in the Pokedex.\nPress Enter to continue...");
-//        scanner.nextLine();
-//    }
 }

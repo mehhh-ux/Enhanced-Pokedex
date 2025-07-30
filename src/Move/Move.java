@@ -7,6 +7,11 @@ package Move;
 
 import java.util.ArrayList;
 
+
+/**
+ * Move.java is the blueprint for individual Move objects.
+ * It holds the properties and behaviors of a Move.
+ */
 public class Move {
     /**
      * Move Attributes
@@ -76,7 +81,6 @@ public class Move {
     public String getType2() {
         return type2;
     }
-
 
     /**
      * Initializes the instances of ethe default moves (Tackle and Defend).

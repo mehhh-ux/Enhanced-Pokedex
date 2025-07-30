@@ -11,8 +11,8 @@ public class Trainer {
     private String name, sex, hometown, description;
     private LocalDate birthDate;
     private double money;
-    private ArrayList<Pokemon> lineup = new ArrayList<>(), storage = new ArrayList<>();;
-    private ArrayList<Item> items = new ArrayList<>();;
+    private ArrayList<Pokemon> lineup, storage;
+    private ArrayList<Item> items;
 
     public Trainer(int trainerId, String name, String sex, String hometown, String description, LocalDate birthDate){
         this.trainerId = trainerId;
@@ -22,6 +22,9 @@ public class Trainer {
         this.description = description;
         this.birthDate = birthDate;
         this.money = 1000000.00;
+        this.lineup = new ArrayList<>();
+        this.storage = new ArrayList<>();
+        this.items = new ArrayList<>();
     }
 
     public int getTrainerId(){
@@ -50,6 +53,13 @@ public class Trainer {
 
     public LocalDate getBirthDate() {
         return birthDate;
+    }
+
+    public ArrayList<Pokemon> getAllPokemon() {
+        ArrayList<Pokemon> allPokemon = new ArrayList<>();
+        allPokemon.addAll(lineup);
+        allPokemon.addAll(storage);
+        return allPokemon;
     }
 
     public ArrayList<Pokemon> getLineup() {

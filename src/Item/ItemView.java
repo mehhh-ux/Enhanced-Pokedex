@@ -6,6 +6,7 @@ package Item;
 import Move.MoveController;
 import Pokemon.Pokemon;
 import Pokemon.PokemonController;
+import Trainer.TrainerController;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -18,14 +19,18 @@ public class ItemView extends JFrame{
     private PokemonController pokemonController;
     private MoveController moveController;
     private ItemController itemController;
+    private TrainerController trainerController;
+
     private JButton btnShowAllItem, btnSearchItem, btnReturnMenu;
     private JTable table;
     private DefaultTableModel tableModel;
 
-    public ItemView(PokemonController pokemonController, MoveController moveController, ItemController itemController) {
+    public ItemView(PokemonController pokemonController, MoveController moveController, ItemController itemController, TrainerController trainerController) {
         this.pokemonController = pokemonController;
         this.moveController = moveController;
         this.itemController = itemController;
+        this.trainerController = trainerController;
+
         setTitle("Item Menu");
         setResizable(false);
         setExtendedState(MAXIMIZED_BOTH);
@@ -60,7 +65,7 @@ public class ItemView extends JFrame{
 
         btnReturnMenu.addActionListener(e ->{
             dispose();
-            new Main.MainGUI(this.pokemonController, this.moveController, this.itemController);
+            new Main.MainGUI(this.pokemonController, this.moveController, this.itemController, this.trainerController);
         });
     }
 
@@ -73,29 +78,14 @@ public class ItemView extends JFrame{
             data[i][1] = item.getCategory();
             data[i][2] = item.getDescription();
             data[i][3] = item.getEffect();
-            data[i][4] = item.getBuyingPrice() == 0.0 ? "Not Sold" : String.format("₱%.2f", (item.getBuyingPrice()));
+            data[i][4] = item.getBuyingPrice() == 0.0 ? String.format("₱%.2f", (item.getSellingPrice() * 2)) : String.format("₱%.2f", (item.getBuyingPrice()));
             data[i][5] = String.format("₱%.2f", item.getSellingPrice());
         }
         return data;
     }
 
-    private JScrollPane getJScrollPane(ArrayList<Item> items) {
-        String[] columnNames = {
-                "Name", "Category", "Description", "Effect", "Buying Price", "Selling Price"
-        };
-
-        Object[][] data = getItemTableData(items);
-
-        tableModel = new DefaultTableModel(data, columnNames){
-            @Override
-            public boolean isCellEditable(int row, int column){
-                return false;
-            }
-        };
-        table = new JTable(tableModel);
-        table.setAutoCreateRowSorter(true);
-        table.setFillsViewportHeight(true);
-        table.getTableHeader().setReorderingAllowed(false);
+    public JScrollPane getJScrollPane(JTable table) {
+        table = getJTable(itemController.getAllItems());
 
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(800,300));
@@ -114,7 +104,8 @@ public class ItemView extends JFrame{
         if (results.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No item containing the word '" + key.trim() + "' in the Pokedex.", "Search Failed", JOptionPane.ERROR_MESSAGE);
         } else {
-            JScrollPane resultScroll = getJScrollPane(results);
+            JTable table = getJTable(results);
+            JScrollPane resultScroll = getJScrollPane(table);
             JOptionPane.showMessageDialog(this, resultScroll, "Search Results for '" + key.trim() + "'", JOptionPane.INFORMATION_MESSAGE);
         }
 
@@ -125,7 +116,7 @@ public class ItemView extends JFrame{
         JButton exitBtn = new JButton("Return to Item Menu");
         exitBtn.addActionListener(e -> {
             dispose();
-            new ItemView(this.pokemonController, this.moveController, this.itemController);
+            new ItemView(this.pokemonController, this.moveController, this.itemController, this.trainerController);
         });
 
         return exitBtn;
@@ -137,7 +128,6 @@ public class ItemView extends JFrame{
 
         JScrollPane scrollPane = getJScrollPane(itemController.getAllItems());
         panel.add(scrollPane, BorderLayout.CENTER);
-
         JButton returnBtn = getReturnButton();
         buttonPanel.add(returnBtn);
 

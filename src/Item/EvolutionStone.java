@@ -1,12 +1,23 @@
 package Item;
 
 import java.util.ArrayList;
-
+/**
+ * The EvolutionStone class represents a specific type of item used to evolve Pokémon.
+ * Each evolution stone has a specific name, description, and evolution effect,
+ * and inherits from the Item superclass.
+ */
 public class EvolutionStone extends Item {
     public EvolutionStone(String name, String description, String effect, double buyingPrice, double sellingPrice){
         super(name, "Evolution Stone", description, effect, buyingPrice, sellingPrice);
     }
 
+    /**
+     * Returns a list of all predefined Evolution Stones.
+     *
+     * Each stone in the list has specific effects for evolving certain Pokémon.
+     *
+     * @return an ArrayList<Item> containing all available evolution stones
+     */
     public static ArrayList<Item> getAll(){
         ArrayList<Item> evolutionStones = new ArrayList<>();
         evolutionStones.add(new EvolutionStone("Fire Stone","A stone that radiates heat.", "Evolves Pokémon like Vulpix, Growlithe, Eevee (into Flareon), etc.",

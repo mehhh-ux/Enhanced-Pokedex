@@ -7,10 +7,14 @@ package Item;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
+/**
+ * ItemController.java is responsible for giving Item data.
+ * Responsible for saving the list of all items in the Pokedex.
+ * Able to give a list of moves based on an operation or a method.
+ */
 public class ItemController {
     /**
      * A list of items.
@@ -49,6 +53,12 @@ public class ItemController {
         return results;
     }
 
+    /**
+     * Gets an Item by name.
+     *
+     * @param name the name of the Item
+     * @return the Item object, or null if not found
+     */
     public Item getItemByName(String name) {
         for (Item i : items) {
             if (i.getName().equalsIgnoreCase(name)) {
@@ -59,7 +69,13 @@ public class ItemController {
         return null;
     }
 
-    public void loadFromFile(String filename) throws Exception {
+    /**
+     * Loads Item data from a file using a buffered reader.
+     *
+     * @param reader the reader used to read the file
+     * @throws Exception if file format is invalid or an I/O error occurs
+     */
+    public void loadFromFile(BufferedReader reader) throws Exception {
         items.clear();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
@@ -101,6 +117,12 @@ public class ItemController {
         }
     }
 
+    /**
+     * Saves Items data to a file.
+     *
+     * @param filename the output file path
+     * @throws Exception if writing fails
+     */
     public void saveToFile(String filename) throws Exception {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             writer.write("ITEM:\n");
