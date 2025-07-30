@@ -107,4 +107,15 @@ public class Item {
         allItems.addAll(EvolutionStone.getAll());
         return allItems;
     }
+
+    /**
+     * Returns a string representation of this object, typically used when
+     * displaying it in UI components such as combo boxes or lists.
+     *
+     * @return the name of the object.
+     */
+    @Override
+    public String toString() {
+        return name; // or name + " (Lv. " + baseLvl + ")" for Pokémon
+    }
 }

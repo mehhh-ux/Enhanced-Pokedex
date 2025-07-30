@@ -3,18 +3,24 @@
  */
 package Item;
 
+import Main.TextAreaRenderer;
 import Move.MoveController;
-import Pokemon.Pokemon;
 import Pokemon.PokemonController;
 import Trainer.TrainerController;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Scanner;
 
+/**
+ * The ItemView class is a GUI window that allows users to view, search,
+ * and manage Pokémon items in a tabular interface. It integrates with various
+ * controllers (ItemController, MoveController, PokemonController, and TrainerController)
+ * to perform backend operations and display relevant data to the user.
+ * This class uses Java Swing components like JButton, JTable,
+ * JScrollPane, and JOptionPane to create a user-friendly interface.
+ */
 public class ItemView extends JFrame{
     private PokemonController pokemonController;
     private MoveController moveController;
@@ -25,6 +31,14 @@ public class ItemView extends JFrame{
     private JTable table;
     private DefaultTableModel tableModel;
 
+    /**
+     * Constructs the item view GUI.
+     *
+     * @param pokemonController  the Pokémon controller
+     * @param moveController     the move controller
+     * @param itemController     the item controller
+     * @param trainerController  the trainer controller
+     */
     public ItemView(PokemonController pokemonController, MoveController moveController, ItemController itemController, TrainerController trainerController) {
         this.pokemonController = pokemonController;
         this.moveController = moveController;
@@ -69,6 +83,12 @@ public class ItemView extends JFrame{
         });
     }
 
+    /**
+     * Converts a list of items into a 2D object array for the JTable.
+     *
+     * @param items the list of items
+     * @return a 2D object array of item data
+     */
     public Object[][] getItemTableData(ArrayList<Item> items){
         Object[][] data = new Object[items.size()][6];
 
@@ -84,15 +104,53 @@ public class ItemView extends JFrame{
         return data;
     }
 
-    public JScrollPane getJScrollPane(JTable table) {
-        table = getJTable(itemController.getAllItems());
+    /**
+     * Creates and returns a JTable configured to display item data.
+     *
+     * @param items the list of items to display
+     * @return the configured JTable
+     */
+    public JTable getJTable(ArrayList<Item> items) {
+        String[] columnNames = {
+                "Name", "Category", "Description", "Effect", "Buying Price", "Selling Price"
+        };
 
+        Object[][] data = getItemTableData(items);
+
+        tableModel = new DefaultTableModel(data, columnNames){
+            @Override
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
+        table = new JTable(tableModel);
+        table.setAutoCreateRowSorter(true);
+        table.setFillsViewportHeight(true);
+        table.getTableHeader().setReorderingAllowed(false);
+
+        table.getColumnModel().getColumn(2).setCellRenderer(new TextAreaRenderer());
+        table.getColumnModel().getColumn(3).setCellRenderer(new TextAreaRenderer());
+
+        return table;
+    }
+
+    /**
+     * Wraps the given JTable in a scroll pane with preferred sizing.
+     *
+     * @param table the table to wrap
+     * @return the JScrollPane containing the table
+     */
+    public JScrollPane getJScrollPane(JTable table) {
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(800,300));
 
         return scrollPane;
     }
 
+    /**
+     * Displays a dialog prompting the user for a search keyword,
+     * then shows search results in a JTable dialog.
+     */
     private void showSearchDialog(){
         String key = JOptionPane.showInputDialog(this, "Enter a search keyword (name, category, or effect):");
         if (key == null || key.trim().isEmpty()) {
@@ -112,6 +170,11 @@ public class ItemView extends JFrame{
         results.clear();
     }
 
+    /**
+     * Returns a button that allows the user to return to the item menu.
+     *
+     * @return the return button
+     */
     private JButton getReturnButton(){
         JButton exitBtn = new JButton("Return to Item Menu");
         exitBtn.addActionListener(e -> {
@@ -122,11 +185,16 @@ public class ItemView extends JFrame{
         return exitBtn;
     }
 
+    /**
+     * Creates a panel displaying all items in a scrollable table with a return button.
+     *
+     * @return the panel containing all items
+     */
     private JPanel createShowAllItemPanel(){
         JPanel panel = new JPanel(new BorderLayout());
         JPanel buttonPanel = new JPanel();
 
-        JScrollPane scrollPane = getJScrollPane(itemController.getAllItems());
+        JScrollPane scrollPane = getJScrollPane(getJTable(itemController.getAllItems()));
         panel.add(scrollPane, BorderLayout.CENTER);
         JButton returnBtn = getReturnButton();
         buttonPanel.add(returnBtn);

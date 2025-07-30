@@ -7,6 +7,7 @@ package Item;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
@@ -41,6 +42,8 @@ public class ItemController {
      */
     public ArrayList<Item> searchItem(String key) {
         key = key.toLowerCase();
+        ArrayList<Item> results = new ArrayList<>();
+
         for (Item i : items) {
             if (i.getName().toLowerCase().contains(key) ||
                     i.getCategory().toLowerCase().contains(key) ||
@@ -72,27 +75,17 @@ public class ItemController {
     /**
      * Loads Item data from a file using a buffered reader.
      *
-     * @param reader the reader used to read the file
+     * @param filename is the name of the data file
      * @throws Exception if file format is invalid or an I/O error occurs
      */
-    public void loadFromFile(BufferedReader reader) throws Exception {
+    public void loadFromFile(String filename) throws Exception {
         items.clear();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
-            boolean inItemSection = false;
 
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-
-                if (line.equals("ITEM:")) {
-                    inItemSection = true;
-                    continue;
-                }
-
-                if (!inItemSection) {
-                    continue;
-                }
 
                 if (line.isEmpty()) {
                     continue;
@@ -125,7 +118,6 @@ public class ItemController {
      */
     public void saveToFile(String filename) throws Exception {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            writer.write("ITEM:\n");
             for (Item i : items) {
                 StringBuilder sb = new StringBuilder();
 

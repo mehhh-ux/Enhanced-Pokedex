@@ -1,0 +1,15 @@
+Tackle|The user charges and slams into the opponent with its body.|TM|Normal|
+Defend|Enters a defensive stance.|TM|Normal|
+Fly|The user flies up and strikes on the next turn.|HM|Flying|
+Surf|Creates a massive wave to damage all nearby opponents.|HM|Water|
+Strength|Exerts great physical power to push obstacles.|HM|Normal|
+Cut|Slices with sharp claws or a blade.|HM|Normal|Grass
+Rock Smash|Breaks through rocks and may lower defense.|HM|Fighting|Rock
+Thunderbolt|Fires a bolt of electricity that may paralyze.|TM|Electric|
+Ice Beam|Shoots a chilling beam that may freeze the foe.|TM|Ice|
+Flamethrower|Breathes a powerful stream of fire.|TM|Fire|
+Shadow Ball|Launches a shadowy blob that may lower Sp. Def.|TM|Ghost|
+Earthquake|A massive tremor damages all Pokémon on the ground.|TM|Ground|
+Psychic|Attacks with mental force that may lower Sp. Def.|TM|Psychic|
+Dragon Pulse|Releases a shock wave of pure dragon power.|TM|Dragon|
+Poison Jab|Strikes with a toxic stinger. May poison.|TM|Poison|Steel

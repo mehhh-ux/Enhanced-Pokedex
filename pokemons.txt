@@ -1,0 +1,30 @@
+1,Pikachu,Electric,,5,0,2,16,35,55,30,90,,Tackle|Defend|Thunderbolt
+2,Raichu,Electric,,16,1,0,0,60,90,55,110,,Tackle|Defend|Thunderbolt|Strength
+3,Bulblight,Grass,Poison,5,0,4,16,45,49,49,45,,Tackle|Defend|Poison Jab
+4,Florashade,Grass,Poison,16,3,5,32,60,62,63,60,,Tackle|Defend|Poison Jab|Cut
+5,Thornroot,Grass,Dark,32,4,0,0,80,82,83,60,,Tackle|Defend|Cut|Shadow Ball
+6,Magflare,Fire,,5,0,7,15,39,52,43,65,,Tackle|Defend|Flamethrower
+7,Blazefin,Fire,Flying,15,6,0,0,58,64,58,80,,Tackle|Defend|Flamethrower|Fly
+8,Aquacub,Water,,5,0,9,18,50,48,50,50,,Tackle|Defend|Surf
+9,Torrentide,Water,Fighting,18,8,0,0,80,78,80,60,,Tackle|Defend|Surf|Rock Smash
+10,Sandroll,Ground,,4,0,0,0,70,85,70,40,,Tackle|Defend|Earthquake|Strength
+11,Dracoon,Dragon,Flying,10,0,12,30,45,65,55,70,,Tackle|Defend|Dragon Pulse|Fly
+12,Dracurse,Dragon,Ghost,30,11,0,0,80,105,80,95,,Tackle|Defend|Dragon Pulse|Shadow Ball
+13,Glimmerbug,Bug,Electric,5,0,0,0,40,30,50,70,,Tackle|Defend|Thunderbolt
+14,Pyrowisp,Fire,Ghost,8,0,0,0,38,60,40,75,,Tackle|Defend|Shadow Ball|Flamethrower
+15,Crystix,Ice,Steel,6,0,0,0,55,50,80,30,,Tackle|Defend|Ice Beam
+16,Steeljaw,Steel,Ground,15,0,0,0,70,95,120,20,,Tackle|Defend|Earthquake|Poison Jab
+17,Windlet,Flying,Normal,4,0,0,0,40,45,35,60,,Tackle|Defend|Fly
+18,Toxifin,Poison,Water,12,0,0,0,60,65,60,55,,Tackle|Defend|Surf|Poison Jab
+19,Boulderon,Rock,Fighting,14,0,0,0,90,95,85,35,,Tackle|Defend|Rock Smash|Strength
+20,Lumina,Fairy,Electric,7,0,0,0,55,60,55,85,,Tackle|Defend|Thunderbolt
+21,Spirithowl,Ghost,Dark,18,0,0,0,60,70,60,80,,Tackle|Defend|Shadow Ball
+22,Chillisk,Ice,Dragon,12,0,0,0,65,75,55,50,,Tackle|Defend|Ice Beam|Dragon Pulse
+23,Ignispine,Fire,Steel,13,0,0,0,75,85,80,45,,Tackle|Defend|Flamethrower|Poison Jab
+24,Seraphin,Psychic,Flying,16,0,0,0,70,65,60,90,,Tackle|Defend|Psychic|Fly
+25,Graslash,Grass,Steel,11,0,0,0,60,70,90,40,,Tackle|Defend|Cut|Poison Jab
+26,Venobra,Poison,Dragon,20,0,0,0,68,88,60,95,,Tackle|Defend|Poison Jab|Dragon Pulse
+27,Hydroot,Water,Grass,10,0,0,0,65,70,60,55,,Tackle|Defend|Surf|Cut
+28,Lavaclaw,Fire,Ground,15,0,0,0,80,100,60,45,,Tackle|Defend|Flamethrower|Earthquake
+29,Stormeon,Electric,Flying,20,0,0,0,65,75,60,130,,Tackle|Defend|Thunderbolt|Fly
+30,Nullshade,Normal,Ghost,50,0,0,0,90,85,70,100,,Tackle|Defend

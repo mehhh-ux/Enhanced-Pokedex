@@ -134,29 +134,82 @@ public class PokemonController {
     }
 
     /**
+     * Gets a Pokémon by number.
+     *
+     * @param pokedexNum the pokedex number of the Pokémon
+     * @return the Pokémon object, or null if not found
+     */
+    public Pokemon getPokemonByNumber(int pokedexNum) {
+        for (Pokemon p : pokemons) {
+            if (p.getPokedexNum() == pokedexNum) {
+                return p;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Attempts to evolve a Pokémon if it meets the level-based evolution requirement.
+     *
+     * @param pokemon     The Pokémon to evolve.
+     * @param allPokemon  The list of all Pokémon in the Pokédex.
+     */
+    public static void tryToEvolve(Pokemon pokemon, ArrayList<Pokemon> allPokemon) {
+        if (pokemon.getEvolvesTo() == -1) {
+            return;
+        }
+
+        if (pokemon.getBaseLvl() >= pokemon.getEvolutionLvl()) {
+            for (Pokemon p : allPokemon) {
+                if (p.getPokedexNum() == pokemon.getEvolvesTo()) {
+                    System.out.println(pokemon.getName() + " is evolving into " + p.getName() + "!");
+                    pokemon.evolveTo(p);  // custom method below
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns the evolved form of a Pokémon based on a stone evolution.
+     * You can customize stone compatibility rules inside this method.
+     *
+     * @param pokemon     The base Pokémon to evolve.
+     * @param stoneName   The name of the stone used (e.g., "Thunder Stone").
+     * @param allPokemon  The list of all Pokémon in the Pokédex.
+     * @return The evolved Pokémon if compatible with the stone, or null otherwise.
+     */
+    public static Pokemon getEvolvedFormByStone(Pokemon pokemon, String stoneName, ArrayList<Pokemon> allPokemon) {
+        for (Pokemon p : allPokemon) {
+            if (p.getPokedexNum() == pokemon.getEvolvesTo()) {
+                // Add stone compatibility check here, e.g.,:
+                if (stoneName.equalsIgnoreCase("Thunder Stone") && p.getName().equalsIgnoreCase("Raichu")) {
+                    return p;
+                }
+                if (stoneName.equalsIgnoreCase("Fire Stone") && p.getName().equalsIgnoreCase("Flareon")) {
+                    return p;
+                }
+                // Add more cases based on your database
+            }
+        }
+        return null;
+    }
+
+    /**
      * Loads Pokémon data from a file using a buffered reader.
      *
-     * @param reader the reader used to read the file
+     * @param filename is the filename of the data file
      * @throws Exception if file format is invalid or an I/O error occurs
      */
-    public void loadFromFile(BufferedReader reader) throws Exception {
+    public void loadFromFile(String filename) throws Exception {
         pokemons.clear();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
-            boolean inPokemonSection = false;
 
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-
-                if (line.equals("POKEMON:")) {
-                    inPokemonSection = true;
-                    continue;
-                }
-
-                if (!inPokemonSection) {
-                    continue;
-                }
 
                 if (line.isEmpty()) {
                     continue;
@@ -201,9 +254,11 @@ public class PokemonController {
                 if (!parts[13].trim().isEmpty()) {
                     String[] moveNames = parts[13].split("\\|");
                     for (String moveName : moveNames) {
-                        Move m = mController.getMoveByName(moveName.trim());
-                        if (m != null) {
-                            p.getMoveSet().add(m);
+                        if (!moveName.trim().equals("Tackle") && !moveName.trim().equals("Defend")) {
+                            Move m = mController.getMoveByName(moveName.trim());
+                            if (m != null) {
+                                p.getMoveSet().add(m);
+                            }
                         }
                     }
                 }
@@ -220,8 +275,7 @@ public class PokemonController {
      * @throws Exception if writing fails
      */
     public void saveToFile(String filename) throws Exception {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
-            writer.write("POKEMON:\n");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (Pokemon p : pokemons) {
                 StringBuilder sb = new StringBuilder();
 

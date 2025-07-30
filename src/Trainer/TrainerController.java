@@ -3,6 +3,7 @@ package Trainer;
 import Item.Item;
 import Item.ItemController;
 import Move.Move;
+import Move.MoveController;
 import Pokemon.Pokemon;
 import Pokemon.PokemonController;
 
@@ -14,6 +15,13 @@ import java.io.FileReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * The TrainerController class manages a collection of Trainer objects and their related operations.
+ * This includes adding, searching, and retrieving trainers, managing Pokemon lineups and storage,
+ * buying and selling items, teaching and removing moves, and saving/loading trainer data to/from a file.
+ * This class interacts with the PokemonController}, MoveController, and ItemController
+ * to manage dependencies between trainers and other game components.
+ */
 public class TrainerController {
     private ArrayList<Trainer> trainers = new ArrayList<>();
     private ArrayList<Trainer> results = new ArrayList<>();
@@ -21,12 +29,25 @@ public class TrainerController {
     private MoveController moveController;
     private ItemController itemController;
 
+    /**
+     * Constructs a TrainerController with the specified controllers for Pokemon, moves, and items.
+     *
+     * @param pokemonController controller to manage Pokemon data
+     * @param moveController    controller to manage Move data
+     * @param itemController    controller to manage Item data
+     */
     public TrainerController(PokemonController pokemonController, MoveController moveController, ItemController itemController) {
         this.pokemonController = pokemonController;
         this.moveController = moveController;
         this.itemController = itemController;
     }
 
+    /**
+     * Checks if a trainer ID already exists in the system.
+     *
+     * @param trainerId the trainer ID to check
+     * @return true if the ID exists, false otherwise
+     */
     public boolean trainerIdIsDup(int trainerId) {
         for (Trainer t : trainers) {
             if (t.getTrainerId() == trainerId) {
@@ -37,6 +58,12 @@ public class TrainerController {
         return false;
     }
 
+    /**
+     * Checks if a trainer name already exists in the system (case-insensitive).
+     *
+     * @param name the trainer name to check
+     * @return true if the name exists, false otherwise
+     */
     public boolean trainerNameIsDup(String name) {
         for (Trainer t : trainers) {
             if (t.getName().equalsIgnoreCase(name)) {
@@ -47,14 +74,31 @@ public class TrainerController {
         return false;
     }
 
+    /**
+     * Adds a new trainer to the system.
+     *
+     * @param t the trainer to add
+     * @return true if added successfully
+     */
     public boolean addTrainer(Trainer t) {
         return trainers.add(t);
     }
 
+    /**
+     * Returns a list of all trainers in the system.
+     *
+     * @return list of all trainers
+     */
     public ArrayList<Trainer> getAllTrainer(){
         return trainers;
     }
 
+    /**
+     * Retrieves a trainer by their unique ID.
+     *
+     * @param trainerId the trainer's ID
+     * @return the matching trainer, or null if not found
+     */
     public Trainer getTrainerById(int trainerId) {
         for (Trainer t : trainers) {
             if (t.getTrainerId() == trainerId) {
@@ -65,6 +109,12 @@ public class TrainerController {
         return null;
     }
 
+    /**
+     * Searches for trainers that match the given keyword in any field.
+     *
+     * @param key the search keyword
+     * @return a list of matching trainers
+     */
     public ArrayList<Trainer> searchTrainer(String key){
         key = key.toLowerCase();
         results.clear();
@@ -82,6 +132,15 @@ public class TrainerController {
         return results;
     }
 
+    /**
+     * Allows a trainer to buy a specified quantity of an item if constraints are met.
+     *
+     * @param t        the trainer buying the item
+     * @param i        the item to be bought
+     * @param price    price per item
+     * @param quantity quantity to buy
+     * @return true if the purchase was successful
+     */
     public boolean buyItem(Trainer t, Item i, double price, int quantity){
         ArrayList<Item> bag = t.getItems();
         int totalItems = 0;
@@ -122,6 +181,14 @@ public class TrainerController {
         return true;
     }
 
+    /**
+     * Allows a trainer to sell a specified quantity of an item.
+     *
+     * @param t        the trainer selling the item
+     * @param i        the item to be sold
+     * @param quantity quantity to sell
+     * @return true if the sale was successful
+     */
     public boolean sellItem(Trainer t, Item i, int quantity) {
         ArrayList<Item> bag = t.getItems();
         int removed = 0;
@@ -149,6 +216,13 @@ public class TrainerController {
         return true;
     }
 
+    /**
+     * Adds a Pokemon to the trainer's lineup (max 6).
+     *
+     * @param t the trainer
+     * @param p the Pokémon to add
+     * @return true if added, false if lineup is full
+     */
     public boolean addPokemonToLineup(Trainer t, Pokemon p){
         Pokemon uniqueInstance = p.copy();
         if (t.getLineup().size() >= 6){
@@ -160,6 +234,13 @@ public class TrainerController {
         }
     }
 
+    /**
+     * Adds a Pokemon to the trainer's storage (max 30).
+     *
+     * @param t the trainer
+     * @param p the Pokémon to add
+     * @return true if added, false if storage is full
+     */
     public boolean addPokemonToStorage(Trainer t, Pokemon p){
         Pokemon uniqueInstance = p.copy();
         if (t.getStorage().size() >= 30){
@@ -171,6 +252,14 @@ public class TrainerController {
         }
     }
 
+    /**
+     * Switches a Pokemon between lineup and storage.
+     *
+     * @param t        the trainer
+     * @param pLineup  Pokémon to move to storage
+     * @param pStorage Pokémon to move to lineup
+     * @return true if switch was successful
+     */
     public boolean switchPokemonFromStorge(Trainer t, Pokemon pLineup, Pokemon pStorage){
         boolean existsInTheStorage;
         boolean existsInTheLineup;
@@ -210,6 +299,13 @@ public class TrainerController {
         return true;
     }
 
+    /**
+     * Releases a Pokemon from the trainer's storage.
+     *
+     * @param t the trainer
+     * @param p the Pokémon to release
+     * @return true if release was successful
+     */
     public boolean releasePokemonFromStorage(Trainer t, Pokemon p){
         Pokemon toRemoveFromStorage = null;
 
@@ -227,6 +323,13 @@ public class TrainerController {
         return true;
     }
 
+    /**
+     * Releases a Pokemon from the trainer's lineup.
+     *
+     * @param t the trainer
+     * @param p the Pokémon to release
+     * @return true if release was successful
+     */
     public boolean releasePokemonFromLineup(Trainer t, Pokemon p){
         Pokemon toRemoveFromLineup = null;
 
@@ -244,7 +347,13 @@ public class TrainerController {
         return true;
     }
 
-
+    /**
+     * Retrieves a Pokemon from the trainer's storage by name.
+     *
+     * @param t the trainer
+     * @param p the Pokémon to search for
+     * @return the matching Pokémon or null
+     */
     public Pokemon pokemonFromStorage(Trainer t, Pokemon p){
         for (Pokemon poke: t.getStorage()){
             if (poke.getName().equalsIgnoreCase(p.getName())){
@@ -254,6 +363,13 @@ public class TrainerController {
         return null;
     }
 
+    /**
+     * Retrieves a Pokemon from the trainer's lineup by name.
+     *
+     * @param t the trainer
+     * @param p the Pokémon to search for
+     * @return the matching Pokémon or null
+     */
     public Pokemon pokemonFromLineup(Trainer t, Pokemon p){
         for (Pokemon poke: t.getLineup()){
             if (poke.getName().equalsIgnoreCase(p.getName())){
@@ -263,6 +379,14 @@ public class TrainerController {
         return null;
     }
 
+    /**
+     * Teaches a move to a Pokemon if it's valid and the Pokémon has fewer than 4 moves.
+     *
+     * @param t the trainer
+     * @param p the Pokémon to teach the move to
+     * @param m the move to teach
+     * @return true if successful
+     */
     public boolean teachMoves(Trainer t, Pokemon p, Move m){
         Pokemon actual = null;
 
@@ -297,6 +421,14 @@ public class TrainerController {
         return true;
     }
 
+    /**
+     * Removes a move from a Pokemon, if not a required move (like HM).
+     *
+     * @param t the trainer
+     * @param p the Pokémon to remove the move from
+     * @param m the move to remove
+     * @return true if successful
+     */
     public boolean removeMove(Trainer t, Pokemon p, Move m){
         Pokemon actual = null;
         Move toRemove = null;
@@ -334,5 +466,122 @@ public class TrainerController {
 
         actual.getMoveSet().remove(toRemove);
         return true;
+    }
+
+
+    /**
+     * Loads trainer data from a file and populates the internal trainer list.
+     * Also populates lineup, storage, and items using respective controllers.
+     *
+     * @param filename the file to load from
+     * @throws Exception if file loading fails
+     */
+    public void loadFromFile(String filename) throws Exception {
+        trainers.clear();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+
+                if (line.isEmpty()) {
+                    continue;
+                }
+
+                String[] parts = line.split("\\|", -1);
+
+                if (parts.length < 7) {
+                    continue;
+                }
+
+                int id = Integer.parseInt(parts[0].trim());
+                String name = parts[1].trim();
+                String sex = parts[2].trim();
+                String hometown = parts[3].trim();
+                String desc = parts[4].trim();
+                LocalDate birth = LocalDate.parse(parts[5].trim());
+                double money = Double.parseDouble(parts[6].trim());
+
+                Trainer t = new Trainer(id, name, sex, hometown, desc, birth);
+                t.setMoney(money);
+
+                String lineupLine = reader.readLine().substring(8);
+                for (String pName : lineupLine.split(",")) {
+                    if (!pName.isEmpty()) {
+                        t.getLineup().add(pokemonController.getPokemonByName(pName));
+                    }
+                }
+
+                String storageLine = reader.readLine().substring(9);
+                for (String pName : storageLine.split(",")) {
+                    if (!pName.isEmpty()) {
+                        t.getStorage().add(pokemonController.getPokemonByName(pName));
+                    }
+                }
+
+                String itemLine = reader.readLine().substring(7);
+                for (String iName : itemLine.split(",")) {
+                    if (!iName.isEmpty()) {
+                        t.getItems().add(itemController.getItemByName(iName));
+                    }
+                }
+
+                trainers.add(t);
+                reader.readLine();
+            }
+        }
+    }
+
+    /**
+     * Saves current trainer data to a specified file, including Pokémon and items.
+     *
+     * @param filename the file to write to
+     * @throws Exception if file writing fails
+     */
+    public void saveToFile(String filename) throws Exception {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (Trainer t : trainers) {
+                writer.write(t.getTrainerId() + "|" +
+                        t.getName() + "|" +
+                        t.getSex() + "|" +
+                        t.getHometown() + "|" +
+                        t.getDescription() + "|" +
+                        t.getBirthDate().toString() + "|" +
+                        t.getMoney());
+                writer.newLine();
+
+                writer.write("Lineup: ");
+                for (int i = 0; i < t.getLineup().size(); i++) {
+                    writer.write(t.getLineup().get(i).getName());
+                    if (i < t.getLineup().size() - 1) {
+                        writer.write(",");
+                    }
+                }
+                writer.newLine();
+
+                writer.write("Storage: ");
+                for (int i = 0; i < t.getStorage().size(); i++) {
+                    writer.write(t.getStorage().get(i).getName());
+                    if (i < t.getStorage().size() - 1) {
+                        writer.write(",");
+                    }
+                }
+                writer.newLine();
+
+                writer.write("Items: ");
+                for (int i = 0; i < t.getItems().size(); i++) {
+                    writer.write(t.getItems().get(i).getName());
+                    if (i < t.getItems().size() - 1) {
+                        writer.write(",");
+                    }
+                }
+                writer.newLine();
+                writer.newLine();
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new Exception("Failed to save trainers to file.");
+        }
     }
 }

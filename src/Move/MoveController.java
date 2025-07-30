@@ -8,6 +8,7 @@ package Move;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
@@ -94,27 +95,17 @@ public class MoveController {
     /**
      * Loads Move data from a file using a buffered reader.
      *
-     * @param reader the reader used to read the file
+     * @param filename the name of the data file
      * @throws Exception if file format is invalid or an I/O error occurs
      */
-    public void loadFromFile(BufferedReader reader) throws Exception {
+    public void loadFromFile(String filename) throws Exception {
         moves.clear();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
-            boolean inMoveSection = false;
 
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-
-                if (line.equals("MOVE:")) {
-                    inMoveSection = true;
-                    continue;
-                }
-
-                if (!inMoveSection) {
-                    continue;
-                }
 
                 if (line.isEmpty()) {
                     continue;
@@ -141,7 +132,6 @@ public class MoveController {
         }
     }
 
-
     /**
      * Saves Pokémon data to a file.
      *
@@ -149,8 +139,7 @@ public class MoveController {
      * @throws Exception if writing fails
      */
     public void saveToFile(String filename) throws Exception {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
-            writer.write("MOVE:\n");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (Move m : moves) {
                 StringBuilder sb = new StringBuilder();
 

@@ -4,6 +4,8 @@ import Main.MainGUI;
 import Main.TextAreaRenderer;
 import Move.Move;
 import Move.MoveController;
+import Item.ItemController;
+import Trainer.TrainerController;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -158,6 +160,7 @@ public class PokemonView extends JFrame {
                         new Pokemon(pokedexNum, name, type1, type2, baseLvl, evolvesFrom, evolvesTo, evolutionLvl, stats);
 
                 pokemonController.addPokemon(newPokemon);
+                pokemonController.saveToFile("pokemons.txt");
                 JOptionPane.showMessageDialog(this, "Successfully added " + name + "!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 clearFields();
             } catch (Exception exception) {
@@ -221,8 +224,6 @@ public class PokemonView extends JFrame {
     private Object[][] searchPokemonTableData(ArrayList<Pokemon> pokemons){
         Object[][] data = new Object[pokemons.size()][13];
         ArrayList<Move> moveSet = null;
-        StringBuilder string = new StringBuilder();
-
 
         for (int i = 0; i < pokemons.size(); i++) {
             Pokemon p = pokemons.get(i);
@@ -241,6 +242,7 @@ public class PokemonView extends JFrame {
             data[i][12] = p.getMoveSet();
 
             moveSet = p.getMoveSet();
+            StringBuilder string = new StringBuilder();
             if (moveSet != null && !moveSet.isEmpty()) {
                 for (int j = 0; j < moveSet.size(); j++) {
                     string.append(moveSet.get(j).getName());

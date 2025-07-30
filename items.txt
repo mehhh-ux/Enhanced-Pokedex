@@ -1,0 +1,20 @@
+HP Up|Vitamin|A nutritious drink for Pokémon.|+10 HP EVs|10000.0|5000.0|
+Protein|Vitamin|A nutritious drink for Pokémon.|+10 Attack EVs|10000.0|5000.0|
+Iron|Vitamin|A nutritious drink for Pokémon.|+10 Defense EVs|10000.0|5000.0|
+Carbos|Vitamin|A nutritious drink for Pokémon.|+10 Speed EVs|10000.0|5000.0|
+Zinc|Vitamin|A nutritious drink for Pokémon.|+10 Special Defense EVs|10000.0|5000.0|
+Rare Candy|Leveling Item|A candy that is packed with energy.|Increases level by 1|0.0|2400.0|
+Health Feather|Feather|A feather that slightly increases HP.|+1 HP EV|300.0|150.0|
+Muscle Feather|Feather|A feather that slightly increases Attack.|+1 Attack EV|300.0|150.0|
+Resist Feather|Feather|A feather that slightly increases Defense.|+1 Defense EV|300.0|150.0|
+Swift Feather|Feather|A feather that slightly increases Speed.|+1 Speed EV|300.0|150.0|
+Fire Stone|Evolution Stone|A stone that radiates heat.|Evolves Pokémon like Vulpix, Growlithe, Eevee (into Flareon), etc.|5000.0|1500.0|
+Water Stone|Evolution Stone|A stone with a blue, watery appearance.|Evolves Pokémon like Poliwhirl, Shellder, Eevee (into Vaporeon), etc.|5000.0|1500.0|
+Thunder Stone|Evolution Stone|A stone that sparkles with electricity.|Evolves Pokémon like Pikachu, Eevee (into Jolteon), Eelektrik, etc.|5000.0|1500.0|
+Leaf Stone|Evolution Stone|A stone with a leaf pattern.|Evolves Pokémon like Gloom, Weepinbell, Exeggcute, etc.|5000.0|1500.0|
+Moon Stone|Evolution Stone|A stone that glows faintly in the moonlight.|Evolves Pokémon like Nidorina, Clefairy, Jigglypuff, etc.|0.0|1500.0|
+Sun Stone|Evolution Stone|A stone that glows like the sun.|Evolves Pokémon like Gloom (into Bellossom), Sunkern, Cottonee, etc.|5000.0|1500.0|
+Shiny Stone|Evolution Stone|A stone that sparkles brightly.|Evolves Pokémon like Togetic, Roselia, Minccino, etc.|5000.0|1500.0|
+Dusk Stone|Evolution Stone|A dark stone that is ominous in appearance.|Evolves Pokémon like Murkrow, Misdreavus, Doublade, etc.|5000.0|1500.0|
+Dawn Stone|Evolution Stone|A stone that sparkles like the morning sky.|Evolves male Kirlia into Gallade, female Snorunt into Froslass.|5000.0|1500.0|
+Ice Stone|Evolution Stone|A stone that is cold to the touch.|Evolves Pokémon like Alolan Vulpix, Galarian Darumaka, Eevee (into Glaceon)|5000.0|1500.0|

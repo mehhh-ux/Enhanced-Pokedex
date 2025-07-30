@@ -1,0 +1,25 @@
+1|Ash|Male|Pallet Town|Wants to be a Pokemon Master|2000-05-22|10000.0
+Lineup: Pikachu,Florashade,Blazefin,Torrentide,Dracurse
+Storage: Aquacub,Sandroll,Glimmerbug,Pyrowisp,Seraphin
+Items: Fire Stone,Thunder Stone,Leaf Stone,Ice Stone,Protein,Carbos,Rare Candy,Muscle Feather,Zinc
+
+2|Misty|Female|Cerulean City|Water-type specialist|1998-07-10|8000.0
+Lineup: Torrentide,Aquacub,Hydroot,Stormeon,Toxifin
+Storage: Windlet,Crystix,Spirithowl,Seraphin,Nullshade
+Items: Fire Stone,Thunder Stone,Leaf Stone,Ice Stone
+
+3|Brock|Male|Pewter City|Rock-hard determination|1995-03-04|9000.0
+Lineup: Boulderon,Sandroll,Lavaclaw,Steeljaw,Graslash
+Storage: Venobra,Ignispine,Florashade,Dracoon,Glimmerbug
+Items: Fire Stone,Thunder Stone,Leaf Stone,Ice Stone
+
+4|Erika|Female|Celadon City|Loves flower arranging|1997-11-02|9500.0
+Lineup: Thornroot,Florashade,Hydroot,Graslash,Lumina
+Storage: Bulblight,Venobra,Dracoon,Pyrowisp,Toxifin
+Items: Fire Stone,Thunder Stone,Leaf Stone,Ice Stone
+
+5|Lt. Surge|Male|Vermilion City|Electric Pokémon expert|1980-01-18|8700.0
+Lineup: Raichu,Stormeon,Lumina,Crystix,Nullshade
+Storage: Pikachu,Toxifin,Bulblight,Ignispine,Spirithowl
+Items: Fire Stone,Thunder Stone,Leaf Stone,Ice Stone
+

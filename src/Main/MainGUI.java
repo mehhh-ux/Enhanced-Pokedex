@@ -13,6 +13,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * MainGUI.java is the main menu GUI for the Enhanced Pokedex application.
+ * This class initializes and displays the main window with menu buttons
+ * to navigate between the different features: Pokémon, Moves, Items, Trainers,
+ * file loading, and exiting the application.
+ * It integrates the core controllers: PokemonController, MoveController,
+ * ItemController, and TrainerController, and connects them to the appropriate views.
+ * It also handles loading and saving via FileIO.
+ */
 public class MainGUI extends JFrame {
     private JButton btnPokemonMenu, btnMoveMenu, btnItemMenu, btnTrainerMenu, btnExit;
     private PokemonController pController;
@@ -35,7 +44,9 @@ public class MainGUI extends JFrame {
         this.iController = iController;
         this.tController = tController;
         this.fileIO = new FileIO(pController, mController, iController, tController);
-        fileIO.loadSaveFile(this);
+        fileIO.loadItems(this);
+        fileIO.loadMoves(this);
+        fileIO.loadPokemons(this);
         fileIO.loadTrainers(this);
         iniGUI();
     }
@@ -64,8 +75,7 @@ public class MainGUI extends JFrame {
                         "Exit Confirmation", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) {
                     try {
-                        fileIO.saveToFile();
-                        fileIO.saveTrainers();
+                        fileIO.saveAll();
                         System.exit(0);
                     } catch (Exception exception) {
                         JOptionPane.showMessageDialog(MainGUI.this,
@@ -82,17 +92,15 @@ public class MainGUI extends JFrame {
         btnItemMenu = new JButton("Item Menu");
         btnTrainerMenu = new JButton("Trainer Menu");
 
-        btnLoadFile = new JButton("Load Save File");
         btnExit = new JButton("Exit");
 
         panel.add(btnPokemonMenu);
         panel.add(btnMoveMenu);
         panel.add(btnItemMenu);
         panel.add(btnTrainerMenu);
-        panel.add(btnLoadFile);
         panel.add(btnExit);
 
-        add(panel);
+        add(panel, BorderLayout.CENTER);
         setVisible(true);
 
         btnPokemonMenu.addActionListener(e -> {
@@ -115,43 +123,6 @@ public class MainGUI extends JFrame {
             this.dispose();
         });
 
-        btnLoadFile.addActionListener(e -> {
-            String input = JOptionPane.showInputDialog(null, "Input load filename:");
-            if (input == null || input.trim().isEmpty()) {
-                return;
-            }
-
-            filename = input.trim();
-            if (!filename.endsWith(".txt")) {
-                filename += ".txt";
-            }
-
-            File file = new File(filename);
-
-            if (file.exists()) {
-                try {
-                    fileIO.loadSaveFile(this, filename);
-                    fileIO.saveTrainers()
-                    JOptionPane.showMessageDialog(null, "File loaded Successfully.");
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error loading file: " + exception.getMessage());
-                }
-            } else {
-                try {
-                    boolean created = file.createNewFile();
-                    if (created) {
-                        JOptionPane.showMessageDialog(null, "File not found. New file created: " + filename);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "File could not be created.");
-                    }
-                } catch (IOException exception) {
-                    exception.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error creating file: " + exception.getMessage());
-                }
-            }
-        });
-
-        btnExit.addActionListener(e -> System.exit(0));
+        btnExit.addActionListener(e -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
     }
 }

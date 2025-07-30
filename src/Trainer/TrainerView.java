@@ -3,6 +3,7 @@ package Trainer;
 import Main.TextAreaRenderer;
 import Item.Item;
 import Item.ItemController;
+import Item.ItemEffectHandler;
 import Move.Move;
 import Move.MoveController;
 import Pokemon.Pokemon;
@@ -17,11 +18,18 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+/**
+ * The TrainerView class handles the graphical user interface (GUI) for managing Trainers.
+ * It allows users to add new trainers, view all trainers, and navigate back to the main menu.
+ * This class integrates with controllers for Pokemon, Moves, Items, and Trainers to enable interaction
+ * between the model and view layers.
+ */
 public class TrainerView extends JFrame {
     private PokemonController pokemonController;
     private MoveController moveController;
     private ItemController itemController;
     private TrainerController trainerController;
+    private ItemEffectHandler handler;
 
     private JTable table;
     private DefaultTableModel tableModel;
@@ -29,11 +37,20 @@ public class TrainerView extends JFrame {
     private JButton btnAddTrainer, btnShowAllTrainer, btnReturnMenu;
     private JTextField tfTrainerID, tfName, tfBirthdate, tfSex, tfHometown, tfDescription;
 
+    /**
+     * Constructs the TrainerView window for interacting with trainer data.
+     *
+     * @param pokemonController  the controller managing Pokemon operations
+     * @param moveController     the controller managing move operations
+     * @param itemController     the controller managing item operations
+     * @param trainerController  the controller managing trainer operations
+     */
     public TrainerView(PokemonController pokemonController, MoveController moveController, ItemController itemController, TrainerController trainerController) {
         this.pokemonController = pokemonController;
         this.moveController = moveController;
         this.itemController = itemController;
         this.trainerController = trainerController;
+        handler = new ItemEffectHandler(pokemonController);
 
         setTitle("Item Menu");
         setResizable(false);
@@ -77,6 +94,12 @@ public class TrainerView extends JFrame {
         });
     }
 
+    /**
+     * Creates a JPanel containing form fields to input a new Trainer's data,
+     * including ID, name, birthdate, sex, hometown, and description.
+     *
+     * @return a JPanel with labeled form fields and buttons to submit or return
+     */
     private JPanel createAddTrainerPanel() {
         JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -110,6 +133,12 @@ public class TrainerView extends JFrame {
         return panel;
     }
 
+    /**
+     * Creates and returns a JButton that, when clicked, collects user input from text fields,
+     * validates it, and adds a new Trainer to the system if valid. It also performs duplicate
+     * checking for Trainer ID and name, then saves to a file if successful.
+     * @return the JButton used to add a Trainer
+     */
     private JButton getAddTrainerButton() {
         JButton btnAdd = new JButton("Add Trainer");
         btnAdd.addActionListener((e) -> {
@@ -137,6 +166,7 @@ public class TrainerView extends JFrame {
                 Trainer newTrainer = new Trainer(trainerId, name, sex, hometown, description, birthDate);
 
                 trainerController.addTrainer(newTrainer);
+                trainerController.saveToFile("trainers.txt");
                 JOptionPane.showMessageDialog(this, "Successfully added " + name + "!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 clearFields();
             } catch (Exception exception) {
@@ -146,6 +176,13 @@ public class TrainerView extends JFrame {
         return btnAdd;
     }
 
+    /**
+     * Generates a 2D array of trainer data to be used for table display.
+     *
+     * @param trainers the list of trainers to be displayed
+     * @return a 2D Object array containing trainer data (ID, name, birthdate, sex, hometown,
+     *         description, and formatted money)
+     */
     public Object[][] showTrainerTableData(ArrayList<Trainer> trainers){
         Object[][] data = new Object[trainers.size()][7];
 
@@ -162,6 +199,13 @@ public class TrainerView extends JFrame {
         return data;
     }
 
+    /**
+     * Converts a list of items into a 2D array representation suitable for table display.
+     *
+     * @param items the list of items to be shown
+     * @return a 2D Object array containing item name, category, description, effect,
+     *         and formatted buying and selling prices
+     */
     public Object[][] getItemTableData(ArrayList<Item> items){
         Object[][] data = new Object[items.size()][6];
 
@@ -177,6 +221,13 @@ public class TrainerView extends JFrame {
         return data;
     }
 
+    /**
+     * Creates a non-editable JTable using the item data and sets custom cell renderers
+     * for multi-line columns (description and effect).
+     *
+     * @param items the list of items to display
+     * @return a JTable displaying item details
+     */
     public JTable getItemTable(ArrayList<Item> items) {
         String[] columnNames = {
                 "Name", "Category", "Description", "Effect", "Buying Price", "Selling Price"
@@ -201,6 +252,13 @@ public class TrainerView extends JFrame {
         return table;
     }
 
+    /**
+     * Generates a 2D array of Pokemon data suitable for table rendering. Includes
+     * Pokedex number, name, types, evolution info, base stats, and move set.
+     *
+     * @param pokemons the list of Pokémon to display
+     * @return a 2D Object array containing formatted Pokemon data
+     */
     public Object[][] showPokemonTableData(ArrayList<Pokemon> pokemons){
         Object[][] data = new Object[pokemons.size()][13];
         ArrayList<Move> moveSet = null;
@@ -238,10 +296,16 @@ public class TrainerView extends JFrame {
         return data;
     }
 
+    /**
+     * Creates a non-editable JTable to display a list of Pokemon with various attributes.
+     *
+     * @param pokemons the list of Pokémon to be displayed
+     * @return a JTable with the Pokémon data populated and styled appropriately
+     */
     public JTable getPokemonTable(ArrayList<Pokemon> pokemons) {
         String[] columnNames = {
                 "Pokedex Number", "Name", "Type 1", "Type 2", "Base Level", "Evolves From",
-                "Evolves To", "Evolution Level", "HP", "ATK", "DEF", "SPD"
+                "Evolves To", "Evolution Level", "HP", "ATK", "DEF", "SPD", "Move/s"
         };
 
         Object[][] data = showPokemonTableData(pokemons);
@@ -257,9 +321,17 @@ public class TrainerView extends JFrame {
         table.setFillsViewportHeight(true);
         table.getTableHeader().setReorderingAllowed(false);
 
+        table.getColumnModel().getColumn(12).setCellRenderer(new TextAreaRenderer());
+
         return table;
     }
 
+    /**
+     * Converts a list of moves into a 2D array representation suitable for table display.
+     *
+     * @param moves the list of moves to be shown
+     * @return a 2D Object array containing item name, description, classification, type 1, and type 2
+     */
     private Object[][] getMoveTableData(ArrayList<Move> moves) {
         Object[][] data = new Object[moves.size()][5];
 
@@ -275,6 +347,13 @@ public class TrainerView extends JFrame {
         return data;
     }
 
+    /**
+     * Generates a JTable displaying the given list of moves with columns for name, description, classification, and types.
+     * The description column uses a custom TextAreaRenderer to enable multiline display.
+     *
+     * @param moves the list of moves to be displayed
+     * @return a JTable populated with move data
+     */
     public JTable getMoveTable(ArrayList<Move> moves) {
         String[] columns = { "Name", "Description", "Classification", "Type 1", "Type 2" };
 
@@ -297,6 +376,13 @@ public class TrainerView extends JFrame {
             return table;
     }
 
+    /**
+     * Returns a MouseAdapter for handling double-clicks on trainer rows.
+     * On double-click, it retrieves the trainer by ID and opens a modal simulation dialog in the front.
+     *
+     * @param table the JTable where trainers are listed
+     * @return a MouseAdapter that opens a simulation dialog on double-click
+     */
     private MouseAdapter trainerIdMouseAdapter(JTable table) {
         return new MouseAdapter() {
             @Override
@@ -308,8 +394,14 @@ public class TrainerView extends JFrame {
                         int nTrainerID = Integer.parseInt(sTrainerID);
                         Trainer trainer = trainerController.getTrainerById(nTrainerID);
                         if (trainer != null) {
-                            JPanel simulationPanel = createTrainerSimulationPanel(trainer);
-                            JOptionPane.showMessageDialog(null, simulationPanel, "Simulate Trainer: " + trainer.getName(), JOptionPane.PLAIN_MESSAGE);
+                            JDialog trainerDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(table), "Simulate Trainer: " + trainer.getName(), true);
+                            trainerDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+                            JPanel simulationPanel = createTrainerSimulationPanel(trainer, trainerDialog);
+                            trainerDialog.getContentPane().add(simulationPanel);
+                            trainerDialog.pack();
+                            trainerDialog.setLocationRelativeTo(table);
+                            trainerDialog.setVisible(true); // Blocks until closed
                         }
                     } catch (NumberFormatException exception) {
                         JOptionPane.showMessageDialog(null, "Invalid Trainer ID.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -319,6 +411,13 @@ public class TrainerView extends JFrame {
         };
     }
 
+    /**
+     * Creates a JScrollPane containing a non-editable JTable for displaying trainer data.
+     * Attaches a mouse listener to allow trainer simulation via double-click.
+     *
+     * @param trainers the list of trainers to display
+     * @return a JScrollPane with a configured JTable
+     */
     private JScrollPane showScrollPane(ArrayList<Trainer> trainers) {
         String[] columnNames = {
                 "Trainer ID", "Name", "Birthdate", "Sex", "Hometown", "Description", "Money"
@@ -345,6 +444,13 @@ public class TrainerView extends JFrame {
         return new JScrollPane(table);
     }
 
+    /**
+     * Constructs a 2D array of trainer information, including formatted lineups and item inventories,
+     * to be used as table data.
+     *
+     * @param trainers the list of trainers to extract data from
+     * @return a 2D Object array representing trainer data for display
+     */
     public Object[][] searchTrainerTableData(ArrayList<Trainer> trainers){
         Object[][] data = new Object[trainers.size()][9];
         ArrayList<Pokemon> lineUp;
@@ -395,6 +501,13 @@ public class TrainerView extends JFrame {
         return data;
     }
 
+    /**
+     * Constructs a JScrollPane containing a JTable that displays trainer data for search results.
+     * Adds custom cell renderers for multi-line fields and a mouse listener for row interaction.
+     *
+     * @param trainers the list of trainers to display in the table
+     * @return a JScrollPane containing the formatted JTable
+     */
     private JScrollPane searchScrollPane(ArrayList<Trainer> trainers) {
         String[] columnNames = {
                 "Trainer ID", "Name", "Birthdate", "Sex", "Hometown", "Description", "Money", "Pokemon Line Up", "Item Inventory"
@@ -426,6 +539,10 @@ public class TrainerView extends JFrame {
         return scrollPane;
     }
 
+    /**
+     * Clears all input fields in the trainer form.
+     * Used after adding a trainer or resetting the form.
+     */
     private void clearFields(){
         tfTrainerID.setText("");
         tfName.setText("");
@@ -435,6 +552,10 @@ public class TrainerView extends JFrame {
         tfDescription.setText("");
     }
 
+    /**
+     * Refreshes the data displayed in the trainer table using the latest list from the controller.
+     * Clears and repopulates the table model.
+     */
     private void refreshTableData(){
         if (tableModel != null){
             Object[][] newData = showTrainerTableData(trainerController.getAllTrainer());
@@ -445,6 +566,13 @@ public class TrainerView extends JFrame {
         }
     }
 
+    /**
+     * Prompts the user to enter a quantity of an item to purchase for the given trainer.
+     * Handles validation and invokes purchase logic.
+     *
+     * @param item the item to be purchased
+     * @param trainer the trainer buying the item
+     */
     private void itemBuyQuantity(Item item, Trainer trainer){
         String input = JOptionPane.showInputDialog(this, "How many of " + item.getName() + " would you like to purchase?");
         if (input == null || input.trim().isEmpty()) {
@@ -461,6 +589,7 @@ public class TrainerView extends JFrame {
 
             double price = item.getBuyingPrice();
             boolean successfulPurchase = trainerController.buyItem(trainer, item, price, quantity);
+            trainerController.saveToFile("trainers.txt");
 
             if (successfulPurchase) {
                 JOptionPane.showMessageDialog(this,
@@ -478,9 +607,18 @@ public class TrainerView extends JFrame {
         }
     }
 
-    private JButton buyItemButton(Trainer trainer){
+    /**
+     * Creates a button that opens an item selection dialog for buying items.
+     * On selection, prompts for quantity and performs the purchase.
+     *
+     * @param trainer the trainer who will buy the item
+     * @param parentDialog the parent dialog to close before showing item list
+     * @return the JButton configured for item purchasing
+     */
+    private JButton buyItemButton(Trainer trainer, JDialog parentDialog){
         JButton buyBtn = new JButton("Buy Item");
         buyBtn.addActionListener(e ->{
+            parentDialog.dispose();
             JTable itemTable = getItemTable(itemController.getAllItems());
             JScrollPane itemScrollPane = new JScrollPane(itemTable);
             itemScrollPane.setPreferredSize(new Dimension(500, 300));
@@ -505,6 +643,13 @@ public class TrainerView extends JFrame {
         return buyBtn;
     }
 
+    /**
+     * Prompts the user to input a quantity of an item to sell from the trainer's inventory.
+     * Handles validation and invokes the selling logic.
+     *
+     * @param item the item to be sold
+     * @param trainer the trainer selling the item
+     */
     private void sellItemQuantity(Item item, Trainer trainer){
         String input = JOptionPane.showInputDialog(this, "How many of " + item.getName() + " would you like to sell?");
         if (input == null || input.trim().isEmpty()) {
@@ -520,6 +665,7 @@ public class TrainerView extends JFrame {
             }
 
             boolean soldSuccessful = trainerController.sellItem(trainer, item, quantity);
+            trainerController.saveToFile("trainers.txt");
 
             if (soldSuccessful) {
                 JOptionPane.showMessageDialog(this,
@@ -537,9 +683,17 @@ public class TrainerView extends JFrame {
         }
     }
 
-    private JButton sellItemButton(Trainer trainer){
+    /**
+     * Creates a button that opens a dialog for selecting and selling an item from the trainer's inventory.
+     *
+     * @param trainer the trainer who is selling the item
+     * @param parentDialog the dialog to close before showing item inventory
+     * @return the JButton configured for selling items
+     */
+    private JButton sellItemButton(Trainer trainer, JDialog parentDialog){
         JButton sellBtn = new JButton("Sell Item");
         sellBtn.addActionListener(e ->{
+            parentDialog.dispose();
             JTable table = getItemTable(trainer.getItems());
             JScrollPane itemScrollPane = new JScrollPane(table);
             itemScrollPane.setPreferredSize(new Dimension(500, 300));
@@ -564,9 +718,88 @@ public class TrainerView extends JFrame {
         return sellBtn;
     }
 
-    private JButton addPkmnToLnUpButton(Trainer trainer){
+    /**
+     * Builds a simple panel containing dropdowns for selecting a Pokemon and an item.
+     * Used in conjunction with item usage dialogs.
+     *
+     * @param pokemonDropdown JComboBox of Pokemon
+     * @param itemDropdown JComboBox of items
+     * @return a JPanel with label and dropdown inputs
+     */
+    private JPanel createUseItemPanel(JComboBox<Pokemon> pokemonDropdown, JComboBox<Item> itemDropdown) {
+        JPanel panel = new JPanel(new GridLayout(2, 2, 10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+
+        panel.add(new JLabel("Select Pokemon:"));
+        panel.add(pokemonDropdown);
+        panel.add(new JLabel("Select Item:"));
+        panel.add(itemDropdown);
+
+        return panel;
+    }
+
+    /**
+     * Creates a button to apply an item from the trainer's inventory to a selected Pokemon.
+     * Displays a confirmation dialog and updates data on success.
+     *
+     * @param trainer the trainer using the item
+     * @param parentDialog the parent dialog to close before opening the selection panel
+     * @return a JButton for applying items to Pokemon
+     */
+    private JButton useItemOnPokemonButton(Trainer trainer, JDialog parentDialog) {
+        JButton button = new JButton("Use Item on Pokémon");
+
+        button.addActionListener(e -> {
+            parentDialog.dispose();
+            JComboBox<Pokemon> pokemonDropdown = new JComboBox<>(trainer.getLineup().toArray(new Pokemon[0]));
+            JComboBox<Item> itemDropdown = new JComboBox<>(trainer.getItems().toArray(new Item[0]));
+
+            JPanel panel = createUseItemPanel(pokemonDropdown, itemDropdown);
+
+            int result = JOptionPane.showConfirmDialog(
+                    null,
+                    panel,
+                    "Use item on Pokemon",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE
+            );
+
+            if (result == JOptionPane.OK_OPTION) {
+                Pokemon selectedPokemon = (Pokemon) pokemonDropdown.getSelectedItem();
+                Item selectedItem = (Item) itemDropdown.getSelectedItem();
+
+                if (selectedPokemon == null || selectedItem == null) {
+                    JOptionPane.showMessageDialog(null, "Please select a Pokemon and an Item.");
+                    return;
+                }
+
+                handler.useItem(selectedPokemon, selectedItem);
+                trainer.getItems().remove(selectedItem);
+                try {
+                    trainerController.saveToFile("trainers.txt");
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                JOptionPane.showMessageDialog(null, selectedItem.getName() + " was used on " + selectedPokemon.getName() + "!");
+            }
+        });
+
+        return button;
+    }
+
+    /**
+     * Creates a button that opens a dialog for selecting a Pokemon to add to the trainer's lineup.
+     * Handles validation and updates the lineup and file accordingly.
+     *
+     * @param trainer the trainer to whom the Pokemon will be added
+     * @param parentDialog the dialog to close before opening Pokemon selection
+     * @return a JButton for adding a Pokémon to the trainer's lineup
+     */
+    private JButton addPkmnToLnUpButton(Trainer trainer, JDialog parentDialog){
         JButton addPkmnLnUpBtn = new JButton("Add Pokemon to Lineup");
         addPkmnLnUpBtn.addActionListener(e ->{
+            parentDialog.dispose();
             JTable table = getPokemonTable(pokemonController.getAllPokemon());
             JScrollPane scrollPane = new JScrollPane(table);
             scrollPane.setPreferredSize(new Dimension(500, 300));
@@ -586,12 +819,18 @@ public class TrainerView extends JFrame {
                 String pokemonName = table.getValueAt(selectedRow, 1).toString();
                 Pokemon pokemon = pokemonController.getPokemonByName(pokemonName);
                 boolean successAddPokemon = trainerController.addPokemonToLineup(trainer, pokemon);
+                try {
+                    trainerController.saveToFile("trainers.txt");
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+
                 if (successAddPokemon) {
                     JOptionPane.showMessageDialog(this,
                             "Successfully added " + pokemon.getName() + " to the Lineup.\n",
                             "Pokemon Added",
                             JOptionPane.INFORMATION_MESSAGE);
-                    viewPokemonsInLineup(trainer);
+                    viewPokemonsInLineup(trainer, parentDialog);
                 } else {
                     JOptionPane.showMessageDialog(this,
                             "Pokemon adding failed.\nCheck if the you already have a maximum of 6 pokemons in your lineup.",
@@ -603,9 +842,18 @@ public class TrainerView extends JFrame {
         return addPkmnLnUpBtn;
     }
 
-    private JButton addPkmnToStrg(Trainer trainer) {
+    /**
+     * Creates a button that opens a dialog for selecting a Pokemon to add to the trainer's storage.
+     * Handles storage limits and updates data if the addition is successful.
+     *
+     * @param trainer the trainer to receive the new Pokemon
+     * @param parentDialog the dialog to close before opening Pokemon selection
+     * @return a JButton for adding a Pokemon to storage
+     */
+    private JButton addPkmnToStrg(Trainer trainer, JDialog parentDialog) {
         JButton addPkmnToStrgBtn = new JButton("Add Pokemon to Storage");
         addPkmnToStrgBtn.addActionListener(e -> {
+            parentDialog.dispose();
             JTable table = getPokemonTable(pokemonController.getAllPokemon());
             JScrollPane scrollPane = new JScrollPane(table);
             scrollPane.setPreferredSize(new Dimension(500, 300));
@@ -625,12 +873,18 @@ public class TrainerView extends JFrame {
                 String pokemonName = table.getValueAt(selectedRow, 1).toString();
                 Pokemon pokemon = pokemonController.getPokemonByName(pokemonName);
                 boolean successAddPokemon = trainerController.addPokemonToStorage(trainer, pokemon);
+                try {
+                    trainerController.saveToFile("trainers.txt");
+                } catch (Exception exception) {
+                    throw new RuntimeException(exception);
+                }
+
                 if (successAddPokemon) {
                     JOptionPane.showMessageDialog(this,
                             "Successfully added " + pokemon.getName() + " to Storage.\n",
                             "Pokemon Added",
                             JOptionPane.INFORMATION_MESSAGE);
-                    viewPokemonsInStorage(trainer);
+                    viewPokemonsInStorage(trainer, parentDialog);
                 } else {
                     JOptionPane.showMessageDialog(this,
                             "Pokemon adding failed.\nCheck if the you already have a maximum of 30 pokemons in your storage.",
@@ -641,40 +895,93 @@ public class TrainerView extends JFrame {
         });
         return addPkmnToStrgBtn;
     }
-    
-    private JButton viewPokemonsInLineup(Trainer trainer){
+
+    /**
+     * Creates a button that opens a dialog displaying the Pokemon in the trainer's current lineup.
+     *
+     * @param trainer the Trainer whose lineup is to be displayed
+     * @param parentDialog the dialog to be closed before opening the new one
+     * @return JButton configured to show Pokemon in lineup
+     */
+    private JButton viewPokemonsInLineup(Trainer trainer, JDialog parentDialog){
         JButton viewPokemonsInLineupBtn = new JButton("View Pokemon in Lineup");
         viewPokemonsInLineupBtn.addActionListener(e -> {
+            parentDialog.dispose();
             JTable table = getPokemonTable(trainer.getLineup());
             JScrollPane scrollPane = new JScrollPane(table);
             scrollPane.setPreferredSize(new Dimension(500, 300));
+
+            JDialog dialog = new JDialog();
+            dialog.setTitle("All Pokemon in Lineup of Trainer: " + trainer.getName());
+            dialog.getContentPane().add(scrollPane);
+            dialog.pack();
+            dialog.setLocationRelativeTo(null);
+            dialog.setVisible(true);
         });
         return viewPokemonsInLineupBtn;
     }
 
-    private JButton viewPokemonsInStorage(Trainer trainer){
+    /**
+     * Creates a button that opens a dialog displaying the Pokemon stored in the trainer's storage.
+     *
+     * @param trainer the Trainer whose storage is to be displayed
+     * @param parentDialog the dialog to be closed before opening the new one
+     * @return JButton configured to show Pokémon in storage
+     */
+    private JButton viewPokemonsInStorage(Trainer trainer, JDialog parentDialog){
         JButton viewPokemonsInStorageBtn = new JButton("View Pokemon in Storage");
         viewPokemonsInStorageBtn.addActionListener(e -> {
+            parentDialog.dispose();
             JTable table = getPokemonTable(trainer.getStorage());
             JScrollPane scrollPane = new JScrollPane(table);
             scrollPane.setPreferredSize(new Dimension(500, 300));
+
+            JDialog dialog = new JDialog();
+            dialog.setTitle("All Pokemon in Storage of Trainer: " + trainer.getName());
+            dialog.getContentPane().add(scrollPane);
+            dialog.pack();
+            dialog.setLocationRelativeTo(null);
+            dialog.setVisible(true);
         });
         return viewPokemonsInStorageBtn;
     }
 
-    private JButton viewAllPokemonsofTrainer(Trainer trainer){
+    /**
+     * Creates a button that opens a dialog showing all Pokemon owned by the trainer.
+     *
+     * @param trainer the Trainer whose Pokemon are to be displayed
+     * @param parentDialog the dialog to be closed before opening the new one
+     * @return JButton configured to show all Pokémon of the trainer
+     */
+    private JButton viewAllPokemonsofTrainer(Trainer trainer, JDialog parentDialog){
         JButton viewAllPokemonsofTrainerBtn = new JButton("View All Pokemon of the Trainer");
         viewAllPokemonsofTrainerBtn.addActionListener(e -> {
+            parentDialog.dispose();
             JTable table = getPokemonTable(trainer.getAllPokemon());
             JScrollPane scrollPane = new JScrollPane(table);
             scrollPane.setPreferredSize(new Dimension(500, 300));
+
+            JDialog dialog = new JDialog();
+            dialog.setTitle("All Pokémon of Trainer: " + trainer.getName());
+            dialog.getContentPane().add(scrollPane);
+            dialog.pack();
+            dialog.setLocationRelativeTo(null);
+            dialog.setVisible(true);
         });
         return viewAllPokemonsofTrainerBtn;
     }
 
-    private JButton releasePkmnFromLnUpButton(Trainer trainer){
+    /**
+     * Creates a button that allows the user to release a selected Pokemon from the trainer's lineup.
+     *
+     * @param trainer the Trainer from whom the Pokemon will be released
+     * @param parentDialog the dialog to be closed before opening the new one
+     * @return JButton configured to release a Pokémon from lineup
+     */
+    private JButton releasePkmnFromLnUpButton(Trainer trainer, JDialog parentDialog){
         JButton releasePkmnLnUpBtn = new JButton("Release Pokemon From Lineup");
         releasePkmnLnUpBtn.addActionListener(e ->{
+            parentDialog.dispose();
             JTable table = getPokemonTable(trainer.getLineup());
             JScrollPane scrollPane = new JScrollPane(table);
             scrollPane.setPreferredSize(new Dimension(500, 300));
@@ -694,12 +1001,18 @@ public class TrainerView extends JFrame {
                 String pokemonName = table.getValueAt(selectedRow, 1).toString();
                 Pokemon pokemon = pokemonController.getPokemonByName(pokemonName);
                 boolean releasePokemon = trainerController.releasePokemonFromLineup(trainer, pokemon);
+                try {
+                    trainerController.saveToFile("trainers.txt");
+                } catch (Exception exception) {
+                    throw new RuntimeException(exception);
+                }
+
                 if (releasePokemon) {
                     JOptionPane.showMessageDialog(this,
                             "Successfully removed " + pokemon.getName() + " from Lineup.\n",
                             "Pokemon Removed",
                             JOptionPane.INFORMATION_MESSAGE);
-                    //viewPokemoninLineup method
+                    viewPokemonsInLineup(trainer, parentDialog);
                 } else {
                     JOptionPane.showMessageDialog(this,
                             "Releasing Pokemon Failed.\nCheck if there is still a pokemon in your Lineup.",
@@ -711,10 +1024,18 @@ public class TrainerView extends JFrame {
         return releasePkmnLnUpBtn;
     }
 
-    private JButton releasePkmnFromStrgButton(Trainer trainer){
+    /**
+     * Creates a button that allows the user to release a selected Pokemon from the trainer's storage.
+     *
+     * @param trainer the Trainer from whom the Pokemon will be released
+     * @param parentDialog the dialog to be closed before opening the new one
+     * @return JButton configured to release a Pokémon from storage
+     */
+    private JButton releasePkmnFromStrgButton(Trainer trainer, JDialog parentDialog){
         JButton releasePkmnStrgBtn = new JButton("Release Pokemon From Storage");
         releasePkmnStrgBtn.addActionListener(e ->{
-            JTable table = getPokemonTable(trainer.getAllPokemon());
+            parentDialog.dispose();
+            JTable table = getPokemonTable(trainer.getStorage());
             JScrollPane scrollPane = new JScrollPane(table);
             scrollPane.setPreferredSize(new Dimension(500, 300));
 
@@ -733,12 +1054,18 @@ public class TrainerView extends JFrame {
                 String pokemonName = table.getValueAt(selectedRow, 1).toString();
                 Pokemon pokemon = pokemonController.getPokemonByName(pokemonName);
                 boolean releasePokemon = trainerController.releasePokemonFromStorage(trainer, pokemon);
+                try {
+                    trainerController.saveToFile("trainers.txt");
+                } catch (Exception exception) {
+                    throw new RuntimeException(exception);
+                }
+
                 if (releasePokemon) {
                     JOptionPane.showMessageDialog(this,
                             "Successfully removed " + pokemon.getName() + " from Storage.\n",
                             "Pokemon Removed",
                             JOptionPane.INFORMATION_MESSAGE);
-                    //viewPokemoninLineup method
+                    viewPokemonsInStorage(trainer, parentDialog);
                 } else {
                     JOptionPane.showMessageDialog(this,
                             "Releasing Pokemon Failed.\nCheck if there is still a pokemon in your Storage.",
@@ -750,9 +1077,17 @@ public class TrainerView extends JFrame {
         return releasePkmnStrgBtn;
     }
 
-    private JButton switchPokemonFromStorage(Trainer trainer){
+    /**
+     * Creates a button that allows switching a Pokemon between storage and lineup.
+     *
+     * @param trainer the Trainer performing the switch
+     * @param parentDialog the dialog to be closed before opening the new one
+     * @return JButton configured to switch Pokemon between lineup and storage
+     */
+    private JButton switchPokemonFromStorage(Trainer trainer, JDialog parentDialog){
         JButton switchPokemonFromStorageBtn = new JButton("Switch Pokemon From Storage");
         switchPokemonFromStorageBtn.addActionListener(e ->{
+            parentDialog.dispose();
             JTable tableStorage = getPokemonTable(trainer.getStorage());
             JScrollPane scrollPaneStorage = new JScrollPane(tableStorage);
             scrollPaneStorage.setPreferredSize(new Dimension(500, 300));
@@ -787,9 +1122,15 @@ public class TrainerView extends JFrame {
                     }
 
                     String pokemonNameLineup = table.getValueAt(selectedRowLineup, 1).toString();
-                    Pokemon pokemonLineup = pokemonController.getPokemonByName(pokemonNameStorage);
+                    Pokemon pokemonLineup = pokemonController.getPokemonByName(pokemonNameLineup);
 
                     boolean successSwitchPokemon = trainerController.switchPokemonFromStorge(trainer, pokemonLineup, pokemonStorage);
+                    try {
+                        trainerController.saveToFile("trainers.txt");
+                    } catch (Exception exception) {
+                        throw new RuntimeException(exception);
+                    }
+
                     if (successSwitchPokemon) {
                         JOptionPane.showMessageDialog(this,
                                 "Successfully switched " + pokemonStorage.getName() + " with " + pokemonLineup.getName() + ".\n",
@@ -809,9 +1150,17 @@ public class TrainerView extends JFrame {
         return switchPokemonFromStorageBtn;
     }
 
-    private JButton teachMoveButton(Trainer trainer){
+    /**
+     * Creates a button to teach a selected move to a selected Pokemon from the trainer's collection.
+     *
+     * @param trainer the Trainer whose Pokemon will be taught a move
+     * @param parentDialog the dialog to be closed before opening the new one
+     * @return JButton configured to teach a move to a Pokemon
+     */
+    private JButton teachMoveButton(Trainer trainer, JDialog parentDialog){
         JButton teachMoveBtn = new JButton("Teach Move to a Pokemon");
         teachMoveBtn.addActionListener(e ->{
+            parentDialog.dispose();
             JTable pokemonTable = getPokemonTable(trainer.getAllPokemon());
             JScrollPane pokemonScrollPane = new JScrollPane(pokemonTable);
             pokemonScrollPane.setPreferredSize(new Dimension(500, 300));
@@ -859,12 +1208,18 @@ public class TrainerView extends JFrame {
                     }
 
                     boolean moveTaught = trainerController.teachMoves(trainer, pokemon, move);
+                    try {
+                        trainerController.saveToFile("trainers.txt");
+                    } catch (Exception exception) {
+                        throw new RuntimeException(exception);
+                    }
+
                     if (moveTaught) {
                         JOptionPane.showMessageDialog(null,
                                 "Successfully taught " + pokemon.getName() + " the move " + move.getName() + ".",
                                 "Move Taught",
                                 JOptionPane.INFORMATION_MESSAGE);
-                        viewAllPokemonsofTrainer(trainer);
+                        viewAllPokemonsofTrainer(trainer, parentDialog);
                     } else {
                         JOptionPane.showMessageDialog(null,
                                 "Teaching move failed. Check if the Pokemon already knows 4 moves.",
@@ -877,9 +1232,17 @@ public class TrainerView extends JFrame {
         return teachMoveBtn;
     }
 
-    private JButton removeMoveButton(Trainer trainer){
+    /**
+     * Creates a button to remove a selected move from a selected Pokemon of the trainer.
+     *
+     * @param trainer the Trainer whose Pokemon will have a move removed
+     * @param parentDialog the dialog to be closed before opening the new one
+     * @return JButton configured to remove a move from a Pokemon
+     */
+    private JButton removeMoveButton(Trainer trainer, JDialog parentDialog){
         JButton removeMoveBtn = new JButton("Remove a Move from a Pokemon");
         removeMoveBtn.addActionListener(e ->{
+            parentDialog.dispose();
             JTable pokemonTable = getPokemonTable(trainer.getAllPokemon());
             JScrollPane pokemonScrollPane = new JScrollPane(pokemonTable);
             pokemonScrollPane.setPreferredSize(new Dimension(500, 300));
@@ -927,12 +1290,18 @@ public class TrainerView extends JFrame {
                     }
 
                     boolean moveRemoved = trainerController.removeMove(trainer, pokemon, move);
+                    try {
+                        trainerController.saveToFile("trainers.txt");
+                    } catch (Exception exception) {
+                        throw new RuntimeException(exception);
+                    }
+
                     if (moveRemoved) {
                         JOptionPane.showMessageDialog(null,
                                 "Successfully remove " + pokemon.getName() + " the move " + move.getName() + ".",
                                 "Move Removed",
                                 JOptionPane.INFORMATION_MESSAGE);
-                        viewAllPokemonsofTrainer(trainer);
+                        viewAllPokemonsofTrainer(trainer, parentDialog);
                     } else {
                         JOptionPane.showMessageDialog(null,
                                 "Removing move failed. Check if the Pokemon has still a move or if the chosen move to be removed is an HM Classification.",
@@ -945,28 +1314,35 @@ public class TrainerView extends JFrame {
         return removeMoveBtn;
     }
 
-    private JPanel createTrainerSimulationPanel(Trainer trainer){
+    /**
+     * Creates a panel with buttons to simulate various trainer-related actions (e.g., view Pokemon, teach/remove moves).
+     *
+     * @param trainer the Trainer whose actions are being simulated
+     * @param parentDialog the parent dialog to close when any button is activated
+     * @return JPanel with simulation controls for trainer management
+     */
+    private JPanel createTrainerSimulationPanel(Trainer trainer, JDialog parentDialog){
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 2, 10, 20));
+        panel.setLayout(new GridLayout(7, 2, 10, 20));
         panel.setBorder(BorderFactory.createEmptyBorder(40, 50, 40, 50));
 
-        JButton buyBtn = buyItemButton(trainer);
-        JButton sellBtn = sellItemButton(trainer);
-        JButton addLineupBtn = addPkmnToLnUpButton(trainer);
-        JButton viewPokemonsInLineupBtn = viewPokemonsInLineup(trainer);
-        JButton addStorageBtn = addPkmnToStrg(trainer);
-        JButton viewPokemonsInStorageBtn = viewPokemonsInStorage(trainer);
-        JButton releaseLineupBtn = releasePkmnFromLnUpButton(trainer);
-        JButton releaseStorageBtn = releasePkmnFromStrgButton(trainer);
-        JButton teachMoveBtn = teachMoveButton(trainer);
-        JButton removeMoveButtonBtn = removeMoveButton(trainer);
-        JButton viewAllPokemonsofTrainerBtn = viewAllPokemonsofTrainer(trainer);
-        JButton switchPokemonFromStorageBtn = switchPokemonFromStorage(trainer);
-
+        JButton buyBtn = buyItemButton(trainer, parentDialog);
+        JButton sellBtn = sellItemButton(trainer, parentDialog);
+        JButton useBtn = useItemOnPokemonButton(trainer, parentDialog);
+        JButton addLineupBtn = addPkmnToLnUpButton(trainer, parentDialog);
+        JButton viewPokemonsInLineupBtn = viewPokemonsInLineup(trainer, parentDialog);
+        JButton addStorageBtn = addPkmnToStrg(trainer, parentDialog);
+        JButton viewPokemonsInStorageBtn = viewPokemonsInStorage(trainer, parentDialog);
+        JButton releaseLineupBtn = releasePkmnFromLnUpButton(trainer, parentDialog);
+        JButton releaseStorageBtn = releasePkmnFromStrgButton(trainer, parentDialog);
+        JButton teachMoveBtn = teachMoveButton(trainer, parentDialog);
+        JButton removeMoveButtonBtn = removeMoveButton(trainer, parentDialog);
+        JButton viewAllPokemonsofTrainerBtn = viewAllPokemonsofTrainer(trainer, parentDialog);
+        JButton switchPokemonFromStorageBtn = switchPokemonFromStorage(trainer, parentDialog);
 
         panel.add(buyBtn);
         panel.add(sellBtn);
-        //panel.add(useBtn);
+        panel.add(useBtn);
         panel.add(addLineupBtn);
         panel.add(viewPokemonsInLineupBtn);
         panel.add(releaseLineupBtn);
@@ -978,10 +1354,14 @@ public class TrainerView extends JFrame {
         panel.add(teachMoveBtn);
         panel.add(removeMoveButtonBtn);
 
-
         return panel;
     }
 
+    /**
+     * Creates a button that prompts the user to search for trainers based on keywords and displays results.
+     *
+     * @return JButton configured for trainer search functionality
+     */
     private JButton searchButton() {
         JButton searchBtn = new JButton("Search Trainer");
         searchBtn.addActionListener(e -> {
@@ -1004,6 +1384,11 @@ public class TrainerView extends JFrame {
         return searchBtn;
     }
 
+    /**
+     * Creates a button that returns the user to the main trainer menu.
+     *
+     * @return JButton configured to return to the TrainerView menu
+     */
     private JButton getReturnButton(){
         JButton exitBtn = new JButton("Return to Trainer Menu");
         exitBtn.addActionListener(e -> {
@@ -1014,6 +1399,11 @@ public class TrainerView extends JFrame {
         return exitBtn;
     }
 
+    /**
+     * Creates a panel displaying all trainers with buttons to search and return to the main menu.
+     *
+     * @return JPanel displaying all trainers and action buttons
+     */
     private JPanel createShowAllTrainerPanel(){
         JPanel panel = new JPanel(new BorderLayout());
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10)); // spacing & alignment

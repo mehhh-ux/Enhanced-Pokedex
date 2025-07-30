@@ -1,8 +1,10 @@
 package Move;
 
+import Main.TextAreaRenderer;
 import Item.ItemController;
 import Pokemon.Pokemon;
 import Pokemon.PokemonController;
+import Trainer.TrainerController;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -25,7 +27,7 @@ public class MoveView extends JFrame {
     private JTable table;
     private DefaultTableModel tableModel;
 
-    private JButton addBtn, searchBtn, exitBtn;
+    private JButton searchBtn, exitBtn;
 
     private JTextField tfName, tfDesc, tfType1, tfType2;
 
@@ -185,6 +187,8 @@ public class MoveView extends JFrame {
         table.setFillsViewportHeight(true);
         table.getTableHeader().setReorderingAllowed(false);
 
+        table.getColumnModel().getColumn(1).setCellRenderer(new TextAreaRenderer());
+
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(800, 300));
 
@@ -196,7 +200,7 @@ public class MoveView extends JFrame {
      *
      * prints a successful message if addition of move is successful
      */
-    private void handleAddMove() {
+    private void handleAddMove() throws Exception {
         String name = tfName.getText().trim();
         String description = tfDesc.getText().trim();
         String classification = (String) classComboBox.getSelectedItem();
@@ -215,6 +219,7 @@ public class MoveView extends JFrame {
 
         Move newMove = new Move(name, description, classification, type1, type2.isEmpty() ? null : type2);
         mController.addMove(newMove);
+        mController.saveToFile("moves.txt");
         JOptionPane.showMessageDialog(this, "Successfully added " + name + "!", "Success", JOptionPane.INFORMATION_MESSAGE);
         clearFields();
         showAllMoves();
